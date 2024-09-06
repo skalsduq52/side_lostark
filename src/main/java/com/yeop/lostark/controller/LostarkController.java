@@ -15,8 +15,8 @@ public class LostarkController {
     @Autowired
     private CharacterService characterService;
 
-    @GetMapping("")
-    public ArmoryProfile getUser(@RequestParam String characterName) throws IOException, InterruptedException {
+    @GetMapping("/{characterName}")
+    public ArmoryProfile getUser(@PathVariable String characterName) throws IOException, InterruptedException {
         return characterService.getUser(characterName);
     }
 }
