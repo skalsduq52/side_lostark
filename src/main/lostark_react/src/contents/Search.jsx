@@ -9,7 +9,7 @@ const Search = ({userData, setUserData }) => {
 
     useEffect(() => {
         if (!userData && characterName) {
-            fetch("http://127.0.0.1:8080/loa/" + characterName, {
+            fetch("http://127.0.0.1:8080/char/" + characterName, {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",

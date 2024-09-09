@@ -13,7 +13,7 @@ function App() {
           <BrowserRouter>
               <Header setUserData={setUserData} />
               <Routes>
-                  <Route path='/loa/:characterName' element={<Search userData={userData} setUserData={setUserData}/>} />
+                  <Route path='/char/:characterName' element={<Search userData={userData} setUserData={setUserData}/>} />
               </Routes>
           </BrowserRouter>
       </div>
