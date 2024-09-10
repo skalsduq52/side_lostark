@@ -1,18 +1,16 @@
-package com.yeop.lostark.vo.profile;
+package com.yeop.lostark.vo.avatar;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ArmoryEquipment {
+public class ArmoryAvatars {
     private String type;
-    private String icon;
     private String name;
+    private String icon;
     private String grade;
-    private String tooltip;
+    private String isInner;
 }

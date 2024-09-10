@@ -12,5 +12,4 @@ import java.util.List;
 public class ArmoryEngraving {
     private List<Effects> effects;
     private List<ArkPassiveEffects> arkPassiveEffects;
-
 }
