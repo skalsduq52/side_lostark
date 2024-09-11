@@ -22,4 +22,6 @@ public class LoaCharacter {
     private ArmoryEngraving armoryEngraving;
     private ArmoryGem armoryGem;
     private ArkPassive arkPassive;
+
+
 }

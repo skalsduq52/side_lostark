@@ -3,12 +3,14 @@ package com.yeop.lostark.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yeop.lostark.vo.avatar.ArmoryAvatars;
 import com.yeop.lostark.vo.character.CharacterInfo;
 import com.yeop.lostark.vo.character.LoaCharacter;
 import com.yeop.lostark.vo.character.Transcendence;
 import com.yeop.lostark.vo.character.ViewCharacter;
 import com.yeop.lostark.vo.equipment.ArmoryEquipment;
 import com.yeop.lostark.vo.equipment.TooltipData;
+import com.yeop.lostark.vo.profile.Stats;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -57,6 +60,8 @@ public class CharacterService {
 
             // 캐릭터 정보 세팅
             extArmoryEquipment(character);
+            extArmoryAvatar(character);
+            extArkPassive(character);
 
 
         }else {
@@ -156,7 +161,49 @@ public class CharacterService {
         characterInfo.setElixirName(elixirName);
         characterInfo.setElixirValue(String.valueOf(elixirValue));
 
-        System.out.println("s");
 
+    }
+
+    public void extArmoryAvatar(LoaCharacter character) {
+        List<ArmoryAvatars> avatars = character.getArmoryAvatars().stream()
+                .filter(avatar -> "전설".equals(avatar.getGrade()) &&
+                        ("무기 아바타".equals(avatar.getType())
+                        ||"머리 아바타".equals(avatar.getType())
+                        ||"상의 아바타".equals(avatar.getType())
+                        ||"하의 아바타".equals(avatar.getType())
+                        ||"어깨".equals(avatar.getType())))
+                .toList();
+
+        characterInfo.setAvatars(avatars.size());
+
+    }
+
+    public void extArkPassive(LoaCharacter character) {
+
+
+            // 스탯 추가
+        List<Stats> stats = character.getArmoryProfile().getStats().stream()
+                .filter(stat -> "치명".equals(stat.getType())
+                        ||"특화".equals(stat.getType())
+                        ||"신속".equals(stat.getType()))
+                        .toList();
+
+        stats = stats.stream()
+                .sorted(new Comparator<Stats>() {
+                    @Override
+                    public int compare(Stats s1, Stats s2) {
+                        // getValue()가 String이므로 Integer로 변환 후 비교
+                        return Integer.compare(
+                                Integer.parseInt(s2.getValue()), // 내림차순이므로 s2, s1 순서
+                                Integer.parseInt(s1.getValue())
+                        );
+                    }
+                })
+                .collect(Collectors.toList());
+        characterInfo.setStats(stats);
+        if(character.getArkPassive().isArkPassive()){
+            // 아크패시브 스탯 넣기
+            characterInfo.setArkPassiveStats(character.getArkPassive().getPoints());
+        }
     }
 }
