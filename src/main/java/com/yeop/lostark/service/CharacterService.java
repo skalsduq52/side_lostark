@@ -8,6 +8,8 @@ import com.yeop.lostark.vo.character.CharacterInfo;
 import com.yeop.lostark.vo.character.LoaCharacter;
 import com.yeop.lostark.vo.character.Transcendence;
 import com.yeop.lostark.vo.character.ViewCharacter;
+import com.yeop.lostark.vo.engraving.ArkPassiveEffects;
+import com.yeop.lostark.vo.engraving.Engraving;
 import com.yeop.lostark.vo.equipment.ArmoryEquipment;
 import com.yeop.lostark.vo.equipment.TooltipData;
 import com.yeop.lostark.vo.profile.Stats;
@@ -20,10 +22,7 @@ import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -58,11 +57,14 @@ public class CharacterService {
             ObjectMapper objectMapper = new ObjectMapper().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES,true);
             character = objectMapper.readValue(jsonResponse, LoaCharacter.class);
 
-            // 캐릭터 정보 세팅
+            // 장비 정보
             extArmoryEquipment(character);
+            // 아바타 정보
             extArmoryAvatar(character);
+            // 아크패시브 정보
             extArkPassive(character);
-
+            // 각인 정보
+            extEngraving(character);
 
         }else {
             System.out.println(response.statusCode());
@@ -205,5 +207,35 @@ public class CharacterService {
             // 아크패시브 스탯 넣기
             characterInfo.setArkPassiveStats(character.getArkPassive().getPoints());
         }
+    }
+
+    public void extEngraving(LoaCharacter character) {
+        List<Engraving> engravings = new ArrayList<>();
+        String[] grades = {"영웅", "전설", "유물"};
+        List<String> grade = Arrays.stream(grades).toList();
+        if(character.getArkPassive().isArkPassive()){
+            List<ArkPassiveEffects> list = character.getArmoryEngraving().getArkPassiveEffects();
+            for(ArkPassiveEffects effect : list){
+                Engraving engraving = new Engraving();
+                String temp1 = "";
+                int temp2 = 0;
+                if(effect.getLevel()==0&&!effect.getGrade().equals("영웅")){
+                    temp1 = grade.get(grade.indexOf(effect.getGrade())-1);
+                    temp2 = 4;
+                }else{
+                    temp1 = effect.getGrade();
+                    temp2 = effect.getLevel();
+                }
+                engraving.setName(effect.getName());
+                engraving.setGrade(temp1);
+                engraving.setLevel(temp2);
+                engravings.add(engraving);
+            }
+
+        }else{
+
+        }
+        characterInfo.setEngravings(engravings);
+
     }
 }
