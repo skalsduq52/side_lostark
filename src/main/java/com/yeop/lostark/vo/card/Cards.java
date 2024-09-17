@@ -10,5 +10,9 @@ import java.util.List;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Cards {
-    private List<Card> card;
+    private String name;
+    private String icon;
+    private int awakeCount;
+    private int awakeTotal;
+    private String grade;
 }

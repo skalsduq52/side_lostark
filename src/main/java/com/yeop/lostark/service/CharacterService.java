@@ -4,11 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yeop.lostark.vo.avatar.ArmoryAvatars;
-import com.yeop.lostark.vo.character.CharacterInfo;
-import com.yeop.lostark.vo.character.LoaCharacter;
-import com.yeop.lostark.vo.character.Transcendence;
-import com.yeop.lostark.vo.character.ViewCharacter;
+import com.yeop.lostark.vo.card.ArmoryCard;
+import com.yeop.lostark.vo.card.Card;
+import com.yeop.lostark.vo.card.Cards;
+import com.yeop.lostark.vo.card.Items;
+import com.yeop.lostark.vo.character.*;
 import com.yeop.lostark.vo.engraving.ArkPassiveEffects;
+import com.yeop.lostark.vo.engraving.Effects;
 import com.yeop.lostark.vo.engraving.Engraving;
 import com.yeop.lostark.vo.equipment.ArmoryEquipment;
 import com.yeop.lostark.vo.equipment.TooltipData;
@@ -35,6 +37,7 @@ public class CharacterService {
     private ViewCharacter viewCharacter = new ViewCharacter();
     private CharacterInfo characterInfo = new CharacterInfo();
     private Transcendence transcendence = new Transcendence();
+    private Synergy synergy = new Synergy();
 
     public ViewCharacter getUser(String characterName) throws IOException, InterruptedException {
 
@@ -57,6 +60,10 @@ public class CharacterService {
             ObjectMapper objectMapper = new ObjectMapper().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES,true);
             character = objectMapper.readValue(jsonResponse, LoaCharacter.class);
 
+            List<String> synergys = List.of(synergy.getSynergyMap().get(character.getArmoryProfile().getCharacterClassName()).split(","));
+
+            // 시너지 세팅
+            characterInfo.setSynergys(synergys);
             // 장비 정보
             extArmoryEquipment(character);
             // 아바타 정보
@@ -65,6 +72,10 @@ public class CharacterService {
             extArkPassive(character);
             // 각인 정보
             extEngraving(character);
+            // 카드 정보
+            extArmoryCard(character);
+            // 보석 정보
+            extArmoryGem(character);
 
         }else {
             System.out.println(response.statusCode());
@@ -77,9 +88,7 @@ public class CharacterService {
         // 전체 캐릭터 정보 세팅
         viewCharacter.setLoaCharacter(character);
 
-
         return viewCharacter;
-
     }
 
     public void extArmoryEquipment(LoaCharacter character) {
@@ -182,8 +191,7 @@ public class CharacterService {
 
     public void extArkPassive(LoaCharacter character) {
 
-
-            // 스탯 추가
+        // 스탯 추가
         List<Stats> stats = character.getArmoryProfile().getStats().stream()
                 .filter(stat -> "치명".equals(stat.getType())
                         ||"특화".equals(stat.getType())
@@ -194,9 +202,8 @@ public class CharacterService {
                 .sorted(new Comparator<Stats>() {
                     @Override
                     public int compare(Stats s1, Stats s2) {
-                        // getValue()가 String이므로 Integer로 변환 후 비교
                         return Integer.compare(
-                                Integer.parseInt(s2.getValue()), // 내림차순이므로 s2, s1 순서
+                                Integer.parseInt(s2.getValue()),
                                 Integer.parseInt(s1.getValue())
                         );
                     }
@@ -231,11 +238,47 @@ public class CharacterService {
                 engraving.setLevel(temp2);
                 engravings.add(engraving);
             }
-
         }else{
+            List<Effects> list = character.getArmoryEngraving().getEffects();
+            Pattern pattern = Pattern.compile("([가-힣\\s]+)\\s*Lv\\.\\s*(\\d+)");
+            for(Effects effect : list){
+                Engraving engraving = new Engraving();
+                Matcher matcher = pattern.matcher(effect.getName());
+                if(matcher.find()){
+                    engraving.setName(matcher.group(1));
+                    engraving.setLevel(Integer.parseInt(matcher.group(2)));
+                }
+                engravings.add(engraving);
+            }
 
         }
         characterInfo.setEngravings(engravings);
+
+    }
+
+    public void extArmoryCard(LoaCharacter character) {
+        List<Cards> cardList = new ArrayList<>();
+        List<com.yeop.lostark.vo.card.Effects> list = character.getArmoryCard().getEffects();
+        for(int i =0; i<list.size(); i++){
+            Cards cards = new Cards();
+            List<Items> items = list.get(i).getItems();
+            String name = items.get(items.size()-1).getName();
+
+            Pattern pattern = Pattern.compile("([가-힣\\s]+)\\s*(\\d+)세트.*\\((\\d+)각성");
+            Matcher matcher = pattern.matcher(name);
+
+            if(matcher.find()){
+                cards.setName(matcher.group(1).trim());
+                cards.setAwakeTotal(Integer.parseInt(matcher.group(3)));
+            }
+
+            cardList.add(cards);
+        }
+
+        characterInfo.setCards(cardList);
+    }
+
+    public void extArmoryGem(LoaCharacter character) {
 
     }
 }

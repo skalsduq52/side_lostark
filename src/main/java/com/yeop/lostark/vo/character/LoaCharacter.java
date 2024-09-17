@@ -3,6 +3,7 @@ package com.yeop.lostark.vo.character;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.yeop.lostark.vo.arkPassive.ArkPassive;
 import com.yeop.lostark.vo.avatar.ArmoryAvatars;
+import com.yeop.lostark.vo.card.ArmoryCard;
 import com.yeop.lostark.vo.engraving.ArmoryEngraving;
 import com.yeop.lostark.vo.gem.ArmoryGem;
 import com.yeop.lostark.vo.equipment.ArmoryEquipment;
@@ -21,6 +22,7 @@ public class LoaCharacter {
     private List<ArmoryAvatars> armoryAvatars;
     private ArmoryEngraving armoryEngraving;
     private ArmoryGem armoryGem;
+    private ArmoryCard armoryCard;
     private ArkPassive arkPassive;
 
 

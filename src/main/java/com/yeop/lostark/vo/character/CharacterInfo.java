@@ -1,6 +1,8 @@
 package com.yeop.lostark.vo.character;
 
 import com.yeop.lostark.vo.arkPassive.Points;
+import com.yeop.lostark.vo.card.Card;
+import com.yeop.lostark.vo.card.Cards;
 import com.yeop.lostark.vo.engraving.Engraving;
 import com.yeop.lostark.vo.profile.Stats;
 import lombok.Getter;
@@ -28,5 +30,9 @@ public class CharacterInfo {
     private List<Points> arkPassiveStats;
     // 각인 정보
     private List<Engraving> engravings;
+    // 시너지 정보
+    private List<String> synergys;
+    // 카드 정보
+    private List<Cards> cards;
 
 }

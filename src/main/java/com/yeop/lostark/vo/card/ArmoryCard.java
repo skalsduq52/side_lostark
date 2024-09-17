@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ArmoryCard {
-    private Cards cards;
-    private Effects effects;
+    private List<Cards> cards;
+    private List<Effects> effects;
 }
