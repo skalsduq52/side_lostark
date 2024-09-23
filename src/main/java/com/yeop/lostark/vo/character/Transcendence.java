@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class Transcendence {
 
-    private String weaponValue;
+    private String weaponValue = "0";
     private String armorValue;
 
 }

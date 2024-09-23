@@ -9,4 +9,5 @@ public class ViewCharacter {
     private LoaCharacter loaCharacter;
     private CharacterInfo characterInfo;
     private Transcendence transcendence;
+    private boolean flagSuccess = false;
 }

@@ -27,8 +27,29 @@ a{
   justify-content: center;
   border : 1px solid white;
   border-radius : 10px;
-  width : 700px;
+  width : 1000px;
   height : 700px;
+}
+
+.box-contents {
+  display: grid; /* Grid 레이아웃 사용 */
+  grid-template-rows: auto auto; /* 2행으로 나누기, 각 행은 동일 높이 */
+  gap: 10px; /* 각 셀 간의 간격 설정 */
+  width: 100%; /* 전체 너비를 차지하도록 설정 */
+  box-sizing: border-box; /* 패딩과 테두리를 포함한 박스 크기 계산 */
+}
+
+.first-row {
+  display: grid;
+  grid-template-columns: 310px 520px 140px; /* 첫 번째 행의 열 크기 지정 */
+  gap: 10px; /* 첫 번째 행의 열 간격 */
+}
+
+/* 두 번째 행 */
+.second-row {
+  display: grid;
+  grid-template-columns: 140px 200px 620px; /* 두 번째 행의 열 크기 지정 */
+  gap: 10px; /* 두 번째 행의 열 간격 */
 }
 
 .character-info1 {
@@ -39,20 +60,276 @@ a{
   padding-top: 5px;
   background: #1d1e1f;
   box-sizing: border-box;
+  font-size: 20px; /* 글자 크기 조정 */
+  font-weight: bold; /* 글자 굵기 조정 */
+  display: flex; /* 이미지와 텍스트 수평 정렬 */
+  align-items: center; /* 수직 중앙 정렬 */
   border-radius : 10px;
 }
 
 .character-info2 {
+  width: 300px;
+  height: 300px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-top: 20px;
+  padding-left: 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.character-info4 {
+  width: 130px;
+  height: 300px;
+  display: flex;
+  flex-direction: column; /* 수직 정렬 */
+  justify-content: flex-start; /* 자식 요소들을 위쪽으로 정렬 */
+  align-items: flex-start; /* 왼쪽 정렬 */
+  margin-top: 20px;
+  padding: 20px; /* 내부 여백 설정 */
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background: #15181D;
+}
+
+.character-info5 {
+  width: 520px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start; /* 자식 요소들을 위쪽으로 정렬 */
+  margin-top: 20px;
+  padding: 10px; /* 내부 여백 설정 */
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background: #15181D;
+}
+
+.character-info6 {
+  width: 130px;
+  height: 300px;
+  display: grid;
+  margin-top: 10px;
+  margin-left: 10px;
+  padding: 10px; /* 내부 여백 설정 */
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background: #15181D;
+}
+
+.elxir, .card {
+
+  display: flex;               /* 이미지와 텍스트를 수평으로 정렬 */
+  align-items: center;         /* 수직 중앙 정렬 */
+  padding: 10px;               /* 여백 추가 */
+  box-sizing: border-box;      /* 패딩과 테두리를 포함한 크기 계산 */
+}
+
+.elxir, .card {
+  font-size: 20px; /* 글자 크기 조정 */
+  font-weight: bold; /* 글자 굵기 조정 */
+  display: flex; /* 이미지와 텍스트 수평 정렬 */
+  align-items: center; /* 수직 중앙 정렬 */
+}
+
+.card {
+  border-top: 1px solid #ccc;  /* 구분을 위한 상단 테두리 추가 */
+}
+
+.character-info6 dl {
+  margin: 10px 0; /* dl 요소 간의 간격 설정 */
+  padding: 0; /* 기본 패딩 제거 */
+  text-align: left;
+}
+
+.character-info6 dl dd {
+  margin: 0; /* dd 기본 마진 제거 */
+  padding: 0; /* dd 기본 패딩 제거 */
+  text-align: left; /* 텍스트 왼쪽 정렬 */
+  flex-grow: 1; /* dd가 남은 공간을 차지하도록 설정 */
+}
+
+.character-info7 {
+  width: 610px;
+  height: 300px;
+  display: flex;
+  flex-direction: column; /* 수직 정렬 */
+  justify-content: flex-start; /* 자식 요소들을 위쪽으로 정렬 */
+  align-items: flex-start; /* 왼쪽 정렬 */
+  margin-top: 10px;
+  margin-left: 10px;
+  padding: 20px; /* 내부 여백 설정 */
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background: #15181D;
+}
+
+.character-info8 {
+  width: 190px;
+  height: 300px;
+  display: flex;
+  flex-direction: column; /* 수직 정렬 */
+  justify-content: flex-start; /* 자식 요소들을 위쪽으로 정렬 */
+  align-items: flex-start; /* 왼쪽 정렬 */
+  margin-top: 10px;
+  margin-left: 10px;
+  padding: 20px; /* 내부 여백 설정 */
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background: #15181D;
+}
+
+.choweol {
+  font-size: 20px; /* 글자 크기 조정 */
+  font-weight: bold; /* 글자 굵기 조정 */
+  margin-bottom: 15px; /* 아래 dl과의 간격 설정 */
+  display: flex; /* 이미지와 텍스트 수평 정렬 */
+  align-items: center; /* 수직 중앙 정렬 */
+}
+
+
+
+.characterInfo {
+  font-size: 20px; /* 글자 크기 조정 */
+  font-weight: bold; /* 글자 굵기 조정 */
+  margin-bottom: 10px;
+}
+
+.characterInfo-stat {
+  font-size: 15px; /* 글자 크기 조정 */
+  font-weight: bold; /* 글자 굵기 조정 */
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.info-details {
+  display: grid;
+  grid-template-columns: 115px 115px 115px 115px;
+  flex-direction: column; /* 세로로 정렬 */
+  gap: 10px; /* 각 요소 간의 간격 */
+  width: 100%; /* 전체 너비 */
+}
+.info-items {
+  padding: 10px; /* 내부 여백 */
+  border: 1px solid #ddd; /* 각 아이템의 테두리 */ /* 각 아이템의 배경색 */
+  box-sizing: border-box;
+  height: 220px;/* 패딩과 테두리를 포함한 크기 계산 */
+}
+
+.info-items dl {
+  display: flex;            /* Flexbox 사용 */
+  align-items: center;      /* 수직 중앙 정렬 */
+  flex-wrap: wrap;          /* 줄 바꿈 허용 */
+  margin-bottom: 0;
+  margin-top: 0;/* dl 기본 마진 제거 */
+  padding: 0;               /* dl 기본 패딩 제거 */
+}
+
+.info-items dt,
+.info-items dd {
+  display: inline-block;    /* 수평 정렬을 위해 inline-block 사용 */
+  margin: 0;                /* 기본 마진 제거 */
+  padding: 5px 10px;        /* 약간의 여백 설정 */
+  font-size: 13px;
+}
+.info-items dt {
+  font-weight: bold;        /* 제목 부분 강조 */
+  min-width: 80px;          /* 최소 너비 설정으로 간격 확보 */
+  text-align: left;         /* 텍스트 왼쪽 정렬 */
+}
+
+.info-items dd {
+  text-align: left;         /* 텍스트 왼쪽 정렬 */
+}
+
+.info-item-ark{
+  display: block;
+  border: 1px solid #ddd; /* 각 아이템의 테두리 */ /* 각 아이템의 배경색 */
+  box-sizing: border-box;
+  height: 220px;/* 패딩과 테두리를 포함한 크기 계산 */
+}
+
+.info-item-ark {
+  display: grid;
+  border: 1px solid #ddd;
+  grid-template-columns: 1fr 1fr; /* 두 개의 열로 나눔 */
+  grid-auto-rows: max-content;    /* 자동으로 행의 높이를 설정 */
+  gap: 10px;                      /* 각 영역 간의 간격 설정 */
+  max-height: 300px;              /* 최대 높이 설정 */
+  overflow-y: auto;
+  /* 높이를 넘길 경우 스크롤 가능 */
+}
+
+.arkPassiveEffects {
+  display: contents;              /* 내부의 각 항목이 개별적으로 grid에 들어가도록 설정 */
+}
+
+.info-item {
+  display: block;
+  padding: 10px; /* 내부 여백 */
+  border: 1px solid #ddd; /* 각 아이템의 테두리 */ /* 각 아이템의 배경색 */
+  box-sizing: border-box;
+  height: 220px;/* 패딩과 테두리를 포함한 크기 계산 */
+}
+.info-item dl {
+  margin-bottom: 5; /* dl 기본 마진 제거 */
+  padding: 0; /* dl 기본 패딩 제거 */
+}
+
+.info-item dt {
+  margin: 0; /* dt 기본 마진 제거 */
+  padding: 1px 0; /* 필요 시 내부 여백 설정 */
+  font-weight: bold; /* 제목 부분 강조 */
+  text-align: left; /* 텍스트 왼쪽 정렬 */
+}
+
+.info-item dd {
+  margin: 0; /* dd 기본 마진 제거 */
+  padding: 1px 0; /* 필요 시 내부 여백 설정 */
+  text-align: left; /* 텍스트 왼쪽 정렬 */
+  margin-left: 0; /* dd 기본 들여쓰기 제거 */
+}
+
+.info-detail {
+  display: grid;
+  grid-template-columns: 220px 340px;
+  flex-direction: column; /* 세로로 정렬 */
+  gap: 10px; /* 각 요소 간의 간격 */
+  width: 100%; /* 전체 너비 */
+}
+
+.character-info4 dl {
+  margin: 10px 0; /* dl 요소 간의 간격 설정 */
+  padding: 0; /* 기본 패딩 제거 */
+}
+
+.arkPassiveEffects{
+  font-size: 12px;
+}
+
+.character-info4 dl dd {
+  margin: 0; /* dd 기본 마진 제거 */
+  padding: 0; /* dd 기본 패딩 제거 */
+  text-align: left; /* 텍스트 왼쪽 정렬 */
+  flex-grow: 1; /* dd가 남은 공간을 차지하도록 설정 */
 }
 
 .character-info3 {
-  width: 45%;
-  height: 100px;
-  border-radius: 5px;
-  padding-left: 10px;
+  display: flex; /* Flexbox로 설정하여 자식 요소를 수평 배치 */
+  align-items: center; /* 수직 중앙 정렬 */
+  width: 400px;
+  height: 300px; /* 컨테이너 높이 설정 */
+  border: 1px solid #ccc; /* 외곽선 추가 */
+  border-radius : 10px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .detail-image {
@@ -61,30 +338,42 @@ a{
   border-radius : 5px;
 }
 
-.character-info4 {
-  width: 68%;
-  height: 100px;
-  border-radius: 5px;
-  text-align: left;
-  padding-left: 10px;
-}
-
-.character-info4 dl {
-  display: flex;
-  justify-content: space-between;
-  padding: 1px 0;
-}
-
-.character-info4 dt {
-  flex-basis: 30%;
-  font-weight: bold;
+.character-info3 .info-content {
+  width: 50%; /* 텍스트 내용이 차지하는 영역 */
+  padding: 20px; /* 내부 여백 */
+  box-sizing: border-box; /* 패딩 포함하여 박스 크기 계산 */
+  background: #15181D;
+  text-overflow: ellipsis;
   text-align: left;
 }
 
-.character-info4 dd {
-  flex-basis: 70%;
-  margin: 0;
-  text-align: left;
+.character-info3 .background-image {
+  width: 50%; /* 이미지가 차지하는 영역 */
+  height: 100%; /* 부모 높이 100%로 설정 */
+  background-size: cover; /* 이미지가 영역을 채우도록 설정 */
+  background-position: center; /* 이미지 중앙 정렬 */
+}
+.character-info3 dl {
+  flex-wrap: nowrap; /* 줄바꿈 없이 한 줄에 표시 */
+  margin: 0; /* dl 기본 마진 제거 */
+  padding: 5px 0; /* 각 항목의 간격 설정 */
+  align-items: center; /* 수직 가운데 정렬 */
+}
+
+.character-info3 dl dt {
+  font-size: 14px; /* 원하는 글자 크기로 설정 */
+  font-weight: bold; /* 필요에 따라 글자 굵기 조정 */
+  margin-bottom: 5px; /* dt와 dd 사이의 간격 설정 */
+  white-space: nowrap;
+}
+
+.character-info3 dl dd {
+  font-size: 14px; /* dd 글자 크기 */
+  margin: 0; /* dd 기본 마진 제거 */
+  flex-grow: 1; /* dd가 남은 공간을 차지하도록 설정 */
+  white-space: nowrap; /* 줄바꿈 방지 */
+  overflow: hidden; /* 내용이 넘칠 경우 숨기기 */
+  text-overflow: ellipsis; /* 넘치는 텍스트를 '...'으로 표시 */
 }
 
 .top-header {

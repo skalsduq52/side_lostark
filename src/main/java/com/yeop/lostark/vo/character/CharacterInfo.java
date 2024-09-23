@@ -4,11 +4,13 @@ import com.yeop.lostark.vo.arkPassive.Points;
 import com.yeop.lostark.vo.card.Card;
 import com.yeop.lostark.vo.card.Cards;
 import com.yeop.lostark.vo.engraving.Engraving;
+import com.yeop.lostark.vo.gem.Gem;
 import com.yeop.lostark.vo.profile.Stats;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -34,5 +36,9 @@ public class CharacterInfo {
     private List<String> synergys;
     // 카드 정보
     private List<Cards> cards;
+    // 보석 정보
+    private Gem gem;
+    // 아크패시브 정보
+    private Map<String, List<String>> arkPassiveEffects;
 
 }

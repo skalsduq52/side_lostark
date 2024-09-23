@@ -14,9 +14,12 @@ import com.yeop.lostark.vo.engraving.Effects;
 import com.yeop.lostark.vo.engraving.Engraving;
 import com.yeop.lostark.vo.equipment.ArmoryEquipment;
 import com.yeop.lostark.vo.equipment.TooltipData;
+import com.yeop.lostark.vo.gem.Gem;
+import com.yeop.lostark.vo.gem.Gems;
 import com.yeop.lostark.vo.profile.Stats;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
 import java.net.URI;
@@ -36,12 +39,12 @@ public class CharacterService {
     private LoaCharacter character;
     private ViewCharacter viewCharacter = new ViewCharacter();
     private CharacterInfo characterInfo = new CharacterInfo();
-    private Transcendence transcendence = new Transcendence();
+    private Transcendence transcendence;
     private Synergy synergy = new Synergy();
 
     public ViewCharacter getUser(String characterName) throws IOException, InterruptedException {
 
-        characterName = URLEncoder.encode(characterName,"utf-8");
+            characterName = URLEncoder.encode(characterName,"utf-8");
 
         String url = "https://developer-lostark.game.onstove.com/armories/characters/"+characterName;
 
@@ -60,38 +63,45 @@ public class CharacterService {
             ObjectMapper objectMapper = new ObjectMapper().configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES,true);
             character = objectMapper.readValue(jsonResponse, LoaCharacter.class);
 
-            List<String> synergys = List.of(synergy.getSynergyMap().get(character.getArmoryProfile().getCharacterClassName()).split(","));
 
-            // 시너지 세팅
-            characterInfo.setSynergys(synergys);
-            // 장비 정보
-            extArmoryEquipment(character);
-            // 아바타 정보
-            extArmoryAvatar(character);
-            // 아크패시브 정보
-            extArkPassive(character);
-            // 각인 정보
-            extEngraving(character);
-            // 카드 정보
-            extArmoryCard(character);
-            // 보석 정보
-            extArmoryGem(character);
+            if(character != null){
+                List<String> synergys = List.of(synergy.getSynergyMap().get(character.getArmoryProfile().getCharacterClassName()).split(","));
 
+                // 시너지 세팅
+                characterInfo.setSynergys(synergys);
+                // 장비 정보
+                extArmoryEquipment(character);
+                // 아바타 정보
+                extArmoryAvatar(character);
+                // 아크패시브 정보
+                extArkPassive(character);
+                // 각인 정보
+                extEngraving(character);
+                // 카드 정보
+                extArmoryCard(character);
+                // 보석 정보
+                extArmoryGem(character);
+
+                viewCharacter.setCharacterInfo(characterInfo);
+                // 초월 정보 세팅
+                viewCharacter.setTranscendence(transcendence);
+                // 전체 캐릭터 정보 세팅
+                viewCharacter.setLoaCharacter(character);
+
+                viewCharacter.setFlagSuccess(true);
+            }else{
+                viewCharacter = new ViewCharacter();
+            }
         }else {
             System.out.println(response.statusCode());
         }
-
-        // 캐릭터 정보 세팅
-        viewCharacter.setCharacterInfo(characterInfo);
-        // 초월 정보 세팅
-        viewCharacter.setTranscendence(transcendence);
-        // 전체 캐릭터 정보 세팅
-        viewCharacter.setLoaCharacter(character);
 
         return viewCharacter;
     }
 
     public void extArmoryEquipment(LoaCharacter character) {
+
+        transcendence = new Transcendence();
 
         // 무기 정보 뽑기
         Optional<ArmoryEquipment> weapon  = character.getArmoryEquipment().stream()
@@ -108,11 +118,11 @@ public class CharacterService {
 
             // 무기 등급 수치
             String toolTip = equipment.getTooltip().replaceAll("<[^>]*>", "");
-            Pattern weaponPattern = Pattern.compile("\"leftStr0\": \"(\\S+) (\\S+)\"");
-            Matcher weaponMatcher = weaponPattern.matcher(toolTip);
-            if(weaponMatcher.find()) {
-                characterInfo.setWeaponGrade(weaponMatcher.group(1));
-            }
+//            Pattern weaponPattern = Pattern.compile("\"leftStr0\": \"(\\S+) (\\S+)\"");
+//            Matcher weaponMatcher = weaponPattern.matcher(toolTip);
+//            if(weaponMatcher.find()) {
+            characterInfo.setWeaponGrade(equipment.getGrade());
+//            }
 
             // 상급재련 수치 가져오기
 
@@ -126,7 +136,7 @@ public class CharacterService {
             Pattern transcendencePattern = Pattern.compile("슬롯 효과\\[초월\\] (\\d+)단계 (\\d+)");
             Matcher transcendenceMatcher = transcendencePattern.matcher(toolTip);
             if(transcendenceMatcher.find()){
-                transcendence.setWeaponValue("+"+transcendenceMatcher.group(2));
+                transcendence.setWeaponValue(transcendenceMatcher.group(2));
             }
 
         }, () -> characterInfo.setWeaponValue("0"));
@@ -160,15 +170,18 @@ public class CharacterService {
             }
 
             // 방어구 엘릭서 수치
-            Pattern elixirValuePattern = Pattern.compile("Lv\\.(\\d+)");
-            Matcher elixirValueMatcher = elixirValuePattern.matcher(toolTip);
-            while(elixirValueMatcher.find()){
-                elixirValue += Integer.parseInt(elixirValueMatcher.group(1));
+            int index = 0;
+            if(elixirName.length()>0){
+                Pattern elixirValuePattern = Pattern.compile("Lv\\.(\\d+)");
+                Matcher elixirValueMatcher = elixirValuePattern.matcher(toolTip);
+                while(elixirValueMatcher.find()&&index!=2){
+                    index++;
+                    elixirValue += Integer.parseInt(elixirValueMatcher.group(1));
+                }
             }
-
         }
 
-        transcendence.setArmorValue("+"+armorValue);
+        transcendence.setArmorValue(String.valueOf(armorValue));
         characterInfo.setElixirName(elixirName);
         characterInfo.setElixirValue(String.valueOf(elixirValue));
 
@@ -190,6 +203,8 @@ public class CharacterService {
     }
 
     public void extArkPassive(LoaCharacter character) {
+
+        characterInfo.setArkPassiveStats(new ArrayList<>());
 
         // 스탯 추가
         List<Stats> stats = character.getArmoryProfile().getStats().stream()
@@ -220,6 +235,7 @@ public class CharacterService {
         List<Engraving> engravings = new ArrayList<>();
         String[] grades = {"영웅", "전설", "유물"};
         List<String> grade = Arrays.stream(grades).toList();
+        Map<String, List<String>> arkPassiveEffects = new HashMap<>();
         if(character.getArkPassive().isArkPassive()){
             List<ArkPassiveEffects> list = character.getArmoryEngraving().getArkPassiveEffects();
             for(ArkPassiveEffects effect : list){
@@ -238,6 +254,21 @@ public class CharacterService {
                 engraving.setLevel(temp2);
                 engravings.add(engraving);
             }
+
+            List<com.yeop.lostark.vo.arkPassive.Effects> effects = character.getArkPassive().getEffects();
+
+            for(com.yeop.lostark.vo.arkPassive.Effects effect : effects){
+                String description = effect.getDescription().replaceAll("<[^>]*>", "");;
+                String[] parts = description.split(" ",3);
+                if(parts.length == 3) {
+                    String category = parts[0]; // 카테고리 추출 (깨달음, 진화, 도약 등)
+                    String detail = parts[2];
+
+                    arkPassiveEffects.putIfAbsent(category, new ArrayList<>());
+                    arkPassiveEffects.get(category).add(detail);
+                }
+            }
+
         }else{
             List<Effects> list = character.getArmoryEngraving().getEffects();
             Pattern pattern = Pattern.compile("([가-힣\\s]+)\\s*Lv\\.\\s*(\\d+)");
@@ -252,6 +283,7 @@ public class CharacterService {
             }
 
         }
+        characterInfo.setArkPassiveEffects(arkPassiveEffects);
         characterInfo.setEngravings(engravings);
 
     }
@@ -268,10 +300,25 @@ public class CharacterService {
             Matcher matcher = pattern.matcher(name);
 
             if(matcher.find()){
-                cards.setName(matcher.group(1).trim());
+                String cardName = matcher.group(1).trim();
+                if(cardName.equals("세상을 구하는 빛")){
+                    cardName = "세구빛";
+                }else if(cardName.equals("너는 계획이 다 있구나")){
+                    cardName = "너계획";
+                }else if(cardName.equals("남겨진 바람의 절벽")){
+                    cardName = "남바절";
+                }else if(cardName.equals("카제로스의 군단장")){
+                    cardName = "암구빛";
+                }else if(cardName.equals("세 우마르가 오리라")){
+                    cardName = "세 우마르";
+                }else if(cardName.equals("라제니스의 운명")){
+                    cardName = "라제";
+                }
+                
+                cards.setName(cardName);
                 cards.setAwakeTotal(Integer.parseInt(matcher.group(3)));
             }
-
+    
             cardList.add(cards);
         }
 
@@ -279,6 +326,33 @@ public class CharacterService {
     }
 
     public void extArmoryGem(LoaCharacter character) {
+        List<Gems> gems = character.getArmoryGem().getGems();
+        List<Map<String,Integer>> list = new ArrayList<>();
+        HashMap<String,Integer> map = new HashMap<>();
+        Gem gem = new Gem();
+        Pattern pattern = Pattern.compile("(\\d+)레벨\\s([겁작멸홍])");
+        if(gems != null){
+            for(Gems a : gems){
+                if(a.getName().contains("겁화")){
+                    gem.setGuphwa(gem.getGuphwa()+1);
+                } else if (a.getName().contains("작열")) {
+                    gem.setJakyeol(gem.getJakyeol()+1);
+                } else if (a.getName().contains("멸화")) {
+                    gem.setMyulhwa(gem.getMyulhwa()+1);
+                } else if (a.getName().contains("홍염")) {
+                    gem.setHongyeom(gem.getHongyeom()+1);
+                }
 
+                Matcher matcher = pattern.matcher(a.getName());
+                if(matcher.find()){
+                    String name = matcher.group(1) + matcher.group(2);
+                    map.put(name,map.getOrDefault(name,0)+1);
+                }
+
+            }
+        }
+
+        gem.setMap(map);
+        characterInfo.setGem(gem);
     }
 }

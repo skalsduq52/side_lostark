@@ -7,7 +7,7 @@ const Header = ({setUserData}) => {
     const navigate = useNavigate();
 
     function getUser(characterName) {
-        fetch("http://127.0.0.1:8080/char/"+ characterName,{
+        fetch("http://3.34.71.5:8080/char/"+ characterName,{
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -42,7 +42,7 @@ const Header = ({setUserData}) => {
                     <Link to="/">민엽 군장검사</Link>
                     <input className="search-cha" placeholder="캐릭터 명을 입력하세요" value={inputValue} onChange={handleChange}
                            onKeyPress={onKeyPress}></input>
-                    <button className="chbutton" onClick={handleClick}>조회s</button>
+                    <button className="chbutton" onClick={handleClick}>조회</button>
                 </div>
             </header>
             <nav className="top-nav">
