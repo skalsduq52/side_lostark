@@ -7,7 +7,7 @@ const Header = ({setUserData}) => {
     const navigate = useNavigate();
 
     function getUser(characterName) {
-        fetch("http://3.34.71.5:8080/char/"+ characterName,{
+        fetch("http://127.0.0.1:8080/char/"+ characterName,{
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -16,8 +16,8 @@ const Header = ({setUserData}) => {
             .then(res => res.json())
             .then(data => {
                 setUserData(data);
-                console.log(data);
                 navigate("/char/"+characterName);
+                console.log(data);
             })
             .catch(err => console.log(err));
     }

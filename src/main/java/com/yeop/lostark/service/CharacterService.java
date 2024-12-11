@@ -1,6 +1,7 @@
 package com.yeop.lostark.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yeop.lostark.vo.avatar.ArmoryAvatars;
@@ -12,8 +13,8 @@ import com.yeop.lostark.vo.character.*;
 import com.yeop.lostark.vo.engraving.ArkPassiveEffects;
 import com.yeop.lostark.vo.engraving.Effects;
 import com.yeop.lostark.vo.engraving.Engraving;
+import com.yeop.lostark.vo.equipment.Accesory;
 import com.yeop.lostark.vo.equipment.ArmoryEquipment;
-import com.yeop.lostark.vo.equipment.TooltipData;
 import com.yeop.lostark.vo.gem.Gem;
 import com.yeop.lostark.vo.gem.Gems;
 import com.yeop.lostark.vo.profile.Stats;
@@ -38,14 +39,16 @@ public class CharacterService {
     static final String apiKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IktYMk40TkRDSTJ5NTA5NWpjTWk5TllqY2lyZyIsImtpZCI6IktYMk40TkRDSTJ5NTA5NWpjTWk5TllqY2lyZyJ9.eyJpc3MiOiJodHRwczovL2x1ZHkuZ2FtZS5vbnN0b3ZlLmNvbSIsImF1ZCI6Imh0dHBzOi8vbHVkeS5nYW1lLm9uc3RvdmUuY29tL3Jlc291cmNlcyIsImNsaWVudF9pZCI6IjEwMDAwMDAwMDA1NDc3MDcifQ.mo9WzWy4tGvl9Ih2Ulv7-M3xRLzbY56zNvkN13LC-9kQmOjvIRTEgyso_7Gezk8jKwcif-R_7T6h4odGRhtzrpTRYSJU4lwYFN9k_vORisYK5rJomY6EGfB7Igep8sHl41TVP6m3BWNQJ2NYVVpDEHrUzXmpidXj2a1uFOCfwhCeCtx9VG3du4Dqa9C4yTFfYmB0AS7TcE9a6oeveYbe7IVElVY9StLvBNiodYGY6KdaUXM6_nBegCEDPZCyLZNovjO45IAfIhsPAkzpTD6FCQzz30DaekF6DO-WhemqfxHt-RbuxVC0ZjEU90IaLleHRMX7deuqjBEjQ4BxZXrlUw";
     private LoaCharacter character;
     private ViewCharacter viewCharacter = new ViewCharacter();
-    private CharacterInfo characterInfo = new CharacterInfo();
+    private CharacterInfo characterInfo;
     private Transcendence transcendence;
     private Synergy synergy = new Synergy();
+    private OwnEngraving ownEngraving = new OwnEngraving();
 
     public ViewCharacter getUser(String characterName) throws IOException, InterruptedException {
 
             characterName = URLEncoder.encode(characterName,"utf-8");
 
+        characterInfo = new CharacterInfo();
         String url = "https://developer-lostark.game.onstove.com/armories/characters/"+characterName;
 
         HttpClient client = HttpClient.newHttpClient();
@@ -103,63 +106,49 @@ public class CharacterService {
 
         transcendence = new Transcendence();
 
-        // 무기 정보 뽑기
-        Optional<ArmoryEquipment> weapon  = character.getArmoryEquipment().stream()
-                .filter(equipment -> "무기".equals(equipment.getType()))
-                .findFirst();
-
-        weapon.ifPresentOrElse(equipment -> {
-            // 무기 강화 수치
-            Pattern pattern = Pattern.compile("\\d+");
-            Matcher matcher = pattern.matcher(equipment.getName());
-            if(matcher.find()){
-                characterInfo.setWeaponValue(matcher.group());
-            }
-
-            // 무기 등급 수치
-            String toolTip = equipment.getTooltip().replaceAll("<[^>]*>", "");
-//            Pattern weaponPattern = Pattern.compile("\"leftStr0\": \"(\\S+) (\\S+)\"");
-//            Matcher weaponMatcher = weaponPattern.matcher(toolTip);
-//            if(weaponMatcher.find()) {
-            characterInfo.setWeaponGrade(equipment.getGrade());
-//            }
-
-            // 상급재련 수치 가져오기
-
-            Pattern enhancementPattern = Pattern.compile("\\[상급 재련\\] (\\d+)단계");
-            Matcher enhancementMatcher = enhancementPattern.matcher(toolTip);
-            if(enhancementMatcher.find()){
-                characterInfo.setEnhancementValue("+"+enhancementMatcher.group(1));
-            }
-
-            // 초월 수치 가져오기
-            Pattern transcendencePattern = Pattern.compile("슬롯 효과\\[초월\\] (\\d+)단계 (\\d+)");
-            Matcher transcendenceMatcher = transcendencePattern.matcher(toolTip);
-            if(transcendenceMatcher.find()){
-                transcendence.setWeaponValue(transcendenceMatcher.group(2));
-            }
-
-        }, () -> characterInfo.setWeaponValue("0"));
-
-        // 방어구
         List<ArmoryEquipment> armor = character.getArmoryEquipment().stream()
                 .filter(equipment -> "투구".equals(equipment.getType())
                         ||"상의".equals(equipment.getType())
                         ||"하의".equals(equipment.getType())
                         ||"장갑".equals(equipment.getType())
-                        ||"어깨".equals(equipment.getType()))
+                        ||"어깨".equals(equipment.getType())
+                        ||"무기".equals(equipment.getType()))
                 .toList();
 
-        int armorValue = 0;
+        int totalValue = 0;
         int elixirValue = 0;
         String elixirName = "";
         for(ArmoryEquipment equipment : armor){
-            // 방어구 초월 수치
             String toolTip = equipment.getTooltip().replaceAll("<[^>]*>", "");
+
+            // 강화 수치
+            Pattern pattern = Pattern.compile("\\d+");
+            Matcher matcher = pattern.matcher(equipment.getName());
+            if(matcher.find()){
+                equipment.setValue(matcher.group());
+            }
+
+            // 상재 수치
+            Pattern enhancementPattern = Pattern.compile("\\[상급 재련\\] (\\d+)단계");
+            Matcher enhancementMatcher = enhancementPattern.matcher(toolTip);
+            if(enhancementMatcher.find()){
+                equipment.setEnhancementValue("+"+enhancementMatcher.group(1));
+            }
+
+            // 초월 수치
             Pattern transcendencePattern = Pattern.compile("슬롯 효과\\[초월\\] (\\d+)단계 (\\d+)");
             Matcher transcendenceMatcher = transcendencePattern.matcher(toolTip);
             if(transcendenceMatcher.find()){
-                armorValue += Integer.parseInt(transcendenceMatcher.group(2));
+                equipment.setTranscendenceValue(Integer.parseInt(transcendenceMatcher.group(2)));
+                totalValue += Integer.parseInt(transcendenceMatcher.group(2));
+            }
+
+            // 품질 수치
+            Pattern qualityPattern = Pattern.compile("\"qualityValue\"\\s*:\\s*(\\d+)");
+            Matcher qualityMatcher = qualityPattern.matcher(toolTip);
+            if(qualityMatcher.find()){
+                equipment.setQuality(qualityMatcher.group(1));
+                equipment.setQualityColor(getColorByQuality(qualityMatcher.group(1)));
             }
 
             // 엘릭서 이름
@@ -171,7 +160,7 @@ public class CharacterService {
 
             // 방어구 엘릭서 수치
             int index = 0;
-            if(elixirName.length()>0){
+            if(!elixirName.isEmpty()){
                 Pattern elixirValuePattern = Pattern.compile("Lv\\.(\\d+)");
                 Matcher elixirValueMatcher = elixirValuePattern.matcher(toolTip);
                 while(elixirValueMatcher.find()&&index!=2){
@@ -181,7 +170,31 @@ public class CharacterService {
             }
         }
 
-        transcendence.setArmorValue(String.valueOf(armorValue));
+        List<ArmoryEquipment> accessories = character.getArmoryEquipment().stream()
+                .filter(equipment -> "귀걸이".equals(equipment.getType())
+                        ||"목걸이".equals(equipment.getType())
+                        ||"팔찌".equals(equipment.getType())
+                        ||"반지".equals(equipment.getType())
+                        ||"어빌리티 스톤".equals(equipment.getType())                       )
+                .toList();
+        for(ArmoryEquipment accessory : accessories){
+            String toolTip = accessory.getTooltip().replaceAll("<[^>]*>", "");
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            try {
+                JsonNode rootNode = objectMapper.readTree(toolTip);
+                JsonNode element005 = rootNode.path("Element_005");
+                String accesoryValue = element005.path("value").path("Element_001").asText();
+                checkAccesoryValue(accessory,accesoryValue, character.getArmoryProfile().getCharacterClassName());
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+
+        transcendence.setTotalValue(String.valueOf(totalValue));
+        characterInfo.setArmorEquipment(armor);
+        characterInfo.setAccesoryEquipment(accessories);
         characterInfo.setElixirName(elixirName);
         characterInfo.setElixirValue(String.valueOf(elixirValue));
 
@@ -225,6 +238,18 @@ public class CharacterService {
                 })
                 .collect(Collectors.toList());
         characterInfo.setStats(stats);
+
+        List<Stats> basicStats = character.getArmoryProfile().getStats().stream()
+                .filter(stat -> "최대 생명력".equals(stat.getType())
+                        ||"공격력".equals(stat.getType())).toList();
+
+        basicStats = basicStats.stream()
+                .sorted(Comparator.comparing(Stats::getType))
+                .toList();
+
+        characterInfo.setBasicStats(basicStats);
+
+
         if(character.getArkPassive().isArkPassive()){
             // 아크패시브 스탯 넣기
             characterInfo.setArkPassiveStats(character.getArkPassive().getPoints());
@@ -254,6 +279,22 @@ public class CharacterService {
                 engraving.setLevel(temp2);
                 engravings.add(engraving);
             }
+
+            List<String> engraving = List.of(ownEngraving.getOwnEngravingMap().get(character.getArmoryProfile().getCharacterClassName()).split(","));
+            List<com.yeop.lostark.vo.arkPassive.Effects> effectsList = character.getArkPassive().getEffects();
+
+            for (int i = 0; i < engraving.size(); i++) {
+                for (com.yeop.lostark.vo.arkPassive.Effects a : effectsList) {
+                    if (a.getDescription().contains(engraving.get(i))) {
+                        // 조건을 만족하는 경우의 처리
+                        characterInfo.setOwnEngraving(engraving.get(i));
+                        break;
+
+                    }
+                }
+            }
+
+
 
             List<com.yeop.lostark.vo.arkPassive.Effects> effects = character.getArkPassive().getEffects();
 
@@ -327,32 +368,70 @@ public class CharacterService {
 
     public void extArmoryGem(LoaCharacter character) {
         List<Gems> gems = character.getArmoryGem().getGems();
-        List<Map<String,Integer>> list = new ArrayList<>();
-        HashMap<String,Integer> map = new HashMap<>();
-        Gem gem = new Gem();
-        Pattern pattern = Pattern.compile("(\\d+)레벨\\s([겁작멸홍])");
+        List<Gem> list = new ArrayList<>();
+        Gem tier4 = new Gem("4T");
+        Gem tier3 = new Gem("3T");
         if(gems != null){
             for(Gems a : gems){
-                if(a.getName().contains("겁화")){
-                    gem.setGuphwa(gem.getGuphwa()+1);
-                } else if (a.getName().contains("작열")) {
-                    gem.setJakyeol(gem.getJakyeol()+1);
-                } else if (a.getName().contains("멸화")) {
-                    gem.setMyulhwa(gem.getMyulhwa()+1);
-                } else if (a.getName().contains("홍염")) {
-                    gem.setHongyeom(gem.getHongyeom()+1);
+                if(a.getName().contains("겁화") || a.getName().contains("작열") ){
+                    tier4.setCount(tier4.getCount()+1);
+                    tier4.setAverage(tier4.getAverage()+a.getLevel());
+                } else if (a.getName().contains("멸화") || a.getName().contains("홍염")) {
+                    tier3.setCount(tier3.getCount()+1);
+                    tier3.setAverage(tier3.getAverage()+a.getLevel());
                 }
-
-                Matcher matcher = pattern.matcher(a.getName());
-                if(matcher.find()){
-                    String name = matcher.group(1) + matcher.group(2);
-                    map.put(name,map.getOrDefault(name,0)+1);
-                }
-
             }
         }
 
-        gem.setMap(map);
-        characterInfo.setGem(gem);
+        if (tier4.getCount() > 0){
+            tier4.setAverage(Math.floor((tier4.getAverage() / tier4.getCount()) * 10) / 10.0);
+            list.add(tier4);
+        }
+        if (tier3.getCount() > 0){
+            tier3.setAverage(Math.floor((tier3.getAverage() / tier3.getCount()) * 10) / 10.0);
+            list.add(tier3);
+        }
+
+        characterInfo.setGem(list);
+
+    }
+
+    public String getColorByQuality(String quality) {
+        String color = "rgb(35,36,45)";
+        int value = Integer.parseInt(quality);
+
+        if (value >= 1 && value <= 10) color = "red";
+        if (value >= 11 && value <= 30) color = "yellow";
+        if (value >= 31 && value <= 69) color = "rgb(172,255,20)";
+        if (value >= 70 && value <= 89) color = "rgb(14,178,245)";
+        if (value >= 90 && value <= 99) color = "rgb(140,11,203)";
+        if (value == 100) color = "rgb(251,146,44)";
+
+        return color;
+    }
+
+    public ArmoryEquipment checkAccesoryValue(ArmoryEquipment accesory,String accesoryValue, String className) {
+        Accesory accesoryCheck = new Accesory();
+        if(className.equals("도화가")||className.equals("바드")||className.equals("홀리나이트")){
+            String regex = "(세레나데, 신앙, 조화 게이지 획득량|낙인력|무기 공격력|공격력|아군 공격력 강화 효과|아군 피해량 강화 효과) \\+\\d+(\\.\\d{2})?%";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(accesoryValue);
+            while(matcher.find()){
+                accesory.setValue(accesory.getValue()+accesoryCheck.getSupportMap().get(matcher.group()));
+            }
+        }else{
+            String regex = "(적에게 주는 피해|추가 피해|무기 공격력|공격력|치명타 적중률|치명타 피해) \\+\\d+(\\.\\d{2})?%";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(accesoryValue);
+            while(matcher.find()){
+                accesory.setValue(accesory.getValue()+accesoryCheck.getDealMap().get(matcher.group()));
+            }
+        }
+
+        if(accesory.getValue().length()==0){
+            accesory.setValue("떡작");
+        }
+
+        return accesory;
     }
 }

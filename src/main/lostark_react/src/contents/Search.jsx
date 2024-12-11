@@ -10,7 +10,7 @@ const Search = ({userData, setUserData }) => {
 
     useEffect(() => {
         if (!userData && characterName) {
-            fetch("http://3.34.71.5:8080/char/" + characterName, {
+            fetch("http://127.0.0.1:8080/char/" + characterName, {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",
@@ -32,191 +32,449 @@ const Search = ({userData, setUserData }) => {
     return (
         <div className="center-container">
             {userData && userData.flagSuccess ? (
+                <>
                 <div className="box">
                     <div className="character-info1">
                         {userData.loaCharacter.armoryProfile.characterName}
                     </div>
-                    <div className="box-contents">
-                    <div className="first-row">
-                        <div className="character-info2">
-                            <div className="character-info3">
-                                {/* 왼쪽 텍스트 내용 영역 */}
-                                <div className="info-content">
-                                    <dl>
-                                        <dt>서버</dt>
-                                        <dd>{userData.loaCharacter.armoryProfile.serverName}</dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>클래스</dt>
-                                        <dd>{userData.loaCharacter.armoryProfile.characterClassName}</dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>원정대</dt>
-                                        <dd>{userData.loaCharacter.armoryProfile.expeditionLevel}</dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>아이템 레벨</dt>
-                                        <dd>{userData.loaCharacter.armoryProfile.itemMaxLevel}</dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>캐릭터 레벨</dt>
-                                        <dd>{userData.loaCharacter.armoryProfile.characterLevel}</dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>칭호</dt>
-                                        <dd>{userData.loaCharacter.armoryProfile.title}</dd>
-                                    </dl>
-                                </div>
-                                {/* 오른쪽 배경 이미지 영역 */}
-                                <div
-                                    className="background-image"
-                                    style={{
-                                        backgroundImage: `url(${userData.loaCharacter.armoryProfile.characterImage})`
-                                    }}
-                                />
-                            </div>
-                        </div>
-                        <div className="character-info5">
-                            <div className="characterInfo">캐릭터 정보</div>
-                            <div className="info-details">
-                                <div className="info-item">
-                                    <div className="characterInfo-stat">특성</div>
-                                    <dl>
-                                        {userData.characterInfo.stats.map(stat => (
-                                            <React.Fragment key={stat.type}>
-                                                <dt>{stat.type}</dt>
-                                                <dd>{stat.value}</dd>
-                                            </React.Fragment>
-                                        ))}
-                                    </dl>
-                                </div>
-                                <div className="info-item">
-                                    <div className="characterInfo-stat">아크패시브</div>
-                                    <dl>
-                                        {userData.characterInfo.arkPassiveStats.map((stat,index) => (
-                                            <React.Fragment key={index}>
-                                                <dt>{stat.name}</dt>
-                                                <dd>{stat.value}</dd>
-                                            </React.Fragment>
-                                        ))}
-                                    </dl>
-                                </div>
-                                <div className="info-item">
-                                    <div className="characterInfo-stat">시너지</div>
-                                    <dl>
-                                        {userData.characterInfo.synergys.map((stat, index) => (
-                                            <React.Fragment key={index}>
-                                                <dt>{stat}</dt>
-                                            </React.Fragment>
-                                        ))}
-                                    </dl>
-                                </div>
-                                <div className="info-item">
-                                    <div className="characterInfo-stat">정보 1</div>
-                                    <dl>
-                                        <dt>무기 강화</dt>
-                                        <dd>{userData.characterInfo.weaponGrade + " " + userData.characterInfo.weaponValue}</dd>
-                                        <dt>스킬 포인트</dt>
-                                        <dd>{userData.loaCharacter.armoryProfile.totalSkillPoint}</dd>
-                                        <dt>전설 아바타</dt>
-                                        <dd>{userData.characterInfo.avatars + " 부위"}</dd>
-                                    </dl>
+                    <div className="box-background">
 
-                                </div>
-                            </div>
+                        <div className="character-classname">
+                            {userData.loaCharacter.armoryProfile.characterClassName}
                         </div>
-                        <div className="character-info4">
-                            <div className="choweol"><img
+                        <div className="expedition">
+                            {userData.loaCharacter.armoryProfile.expeditionLevel}
+                        </div>
+                        <div className="character-name">
+                            {userData.loaCharacter.armoryProfile.characterName}
+                        </div>
+                        <div className="character-serverName">
+                            {userData.loaCharacter.armoryProfile.serverName}
+                        </div>
+                        <div className="character-level">
+                            Lv. {userData.loaCharacter.armoryProfile.characterLevel}
+                        </div>
+
+
+                        <div className="gem" style={{
+                            background: 'linear-gradient(135deg, #3d3325, #dcc999)',
+                            height: '28px',
+                            width: '28px',
+                        }}>
+                            <img
+                                src="/gem.png"
+                                alt="보석 이미지"
+                                style={{width: '25px', height: '25px'}}
+                            />
+                        </div>
+                        <div className="gemName">
+                            보석
+                        </div>
+                        {userData.characterInfo.gem.map((gem, index) => (
+                            <React.Fragment key={index}>
+                                <div className={`gemValue-${index + 1}`}>
+                                    {gem.name + " " + gem.count + "개" + " (평균 : Lv. " + gem.average + ")"} </div>
+                            </React.Fragment>
+                        ))}
+
+
+                        <div className="elxir"><img
+                            src="/elxir.png"
+                            alt="엘릭서 이미지"
+                            style={{width: '25px', height: '25px'}}
+                        />
+                        </div>
+                        <div className="elxirName">
+                            엘릭서
+                        </div>
+                        <div className="elxirValue">
+                            {userData.characterInfo.elixirName + " " + userData.characterInfo.elixirValue}
+                        </div>
+
+                        <div className="cho"><img
+                            src="/cho.png"
+                            alt="초월 이미지"
+                            style={{width: '25px', height: '25px'}}
+                        />
+                        </div>
+                        <div className="choName">
+                            초월
+                        </div>
+                        <div className="choValue">
+                            <img
                                 src="/cho.png"
                                 alt="초월 이미지"
-                                style={{verticalAlign: 'middle'}} // vertical-align 속성 적용
-                            />초월
-                            </div>
-                            <dl>
-                                <dt>초월 수치</dt>
-                                <dd>{Number(userData.transcendence.weaponValue) + Number(userData.transcendence.armorValue)}</dd>
-                            </dl>
-                            <dl>
-                                <dt>무기 초월</dt>
-                                <dd>{userData.transcendence.weaponValue}</dd>
-                            </dl>
-                            <dl>
-                                <dt>방어구 초월</dt>
-                                <dd>{userData.transcendence.armorValue}</dd>
-                            </dl>
+                                style={{width: '15px', height: '15px'}}
+                            /> {userData.transcendence.totalValue}
                         </div>
-                    </div>
-                        <div className="second-row">
-                            <div className="character-info6">
-                                <div className="elxir"><img
-                                    src="/elxir.png"
-                                    alt="엘릭서 이미지"
-                                    style={{verticalAlign: 'middle', width: '25px', height: '25px'}}
-                                /> 엘릭서
-                                </div>
-                                <dl>
-                                    <dd>{userData.characterInfo.elixirName + " " + userData.characterInfo.elixirValue}</dd>
-                                </dl>
-                                <div className="card"><img
-                                    src="/card.png"
-                                    alt="카드 이미지"
-                                    style={{verticalAlign: 'middle', width: '20px', height: '25px'}}
-                                /> 카드
-                                </div>
-                                <dl>
-                                    {userData.characterInfo.cards.map(card => (
-                                        <React.Fragment key={card.name}>
-                                            <dt>{card.name + card.awakeTotal}</dt>
-                                        </React.Fragment>
-                                    ))}
-                                </dl>
-                            </div>
-                            <div className="character-info8">
-                                <div className="characterInfo">보석</div>
-                                <dl>
-                                    {Object.entries(userData.characterInfo.gem.map).map(([key, value]) => (
-                                        <dt key={key}>
-                                            {key}: {value+"개"}
-                                        </dt>
-                                                                            ))}
-                                </dl>
-                            </div>
-                            <div className="character-info7">
-                                <div className="characterInfo">각인</div>
-                                <div className="info-detail">
-                                    <div className="info-items">
-                                        <dl>
-                                            {userData.characterInfo.engravings.map(engraving => (
-                                                <React.Fragment key={engraving.name}>
-                                                    <dt>{engraving.name}</dt>
-                                                    {engraving.grade ? (
-                                                        <dd>{engraving.grade +" "+engraving.level+"등급"}</dd>
-                                                    ) : (
-                                                        <dd>{engraving.level}</dd>
-                                                    )}
-                                                </React.Fragment>
-                                            ))}
-                                        </dl>
-                                    </div>
-                                    <div className="info-item-ark">
-                                        <dl className="arkPassiveEffects">
-                                            {Object.entries(userData.characterInfo.arkPassiveEffects).map(([category, details]) => (
-                                                <div key={category}>
-                                                    <dt>{category}</dt> {/* 카테고리 이름 출력 */}
-                                                    <dl>
-                                                        {details.map((item, index) => (
-                                                            <dt key={index}>{item}</dt>
-                                                        ))}
-                                                    </dl>
-                                                </div>
-                                            ))}
-                                        </dl>
-                                    </div>
-                                </div>
-                            </div>
+
+                        <div className="card"><img
+                            src="/card.png"
+                            alt="카드 이미지"
+                            style={{width: '20px', height: '25px'}}
+                        />
                         </div>
+                        <div className="cardName">
+                            카드
+                        </div>
+
+                        {userData.characterInfo.cards.map((card, index) => (
+                            <React.Fragment key={index}>
+                                <div className={`cardValue-${index + 1}`}>
+                                    {card.name + " " + card.awakeTotal} </div>
+                            </React.Fragment>
+                        ))}
+
+                        <div className="synergy"><img
+                            src="/synergy.png"
+                            alt="시너지 이미지"
+                            style={{width: '25px', height: '25px'}}
+                        />
+                        </div>
+                        <div className="synergyName">
+                            시너지
+                        </div>
+                        {userData.characterInfo.synergys.map((stat, index) => (
+                            <React.Fragment key={index}>
+                                <div className={`synergyValue-${index + 1}`}>
+                                    {stat}
+                                </div>
+                            </React.Fragment>
+                        ))}
+
+                        <div className="armor-weapon" style={{
+                            background: 'linear-gradient(135deg, #3d3325, #dcc999)',
+                            height: '50px',
+                            width: '50px',
+                        }}>
+                            <img src={userData.characterInfo.armorEquipment[0].icon}
+                                 style={{width: '50px', height: '50px'}}/>
+                        </div>
+                        <div className="weapon-quality"
+                             style={{
+                                 background: `linear-gradient(to right, ${
+                                     userData.characterInfo.armorEquipment[0].qualityColor
+                                 } ${userData.characterInfo.armorEquipment[0].quality}%, black ${userData.characterInfo.armorEquipment[0].quality}%)`,
+                                 width: '50px',
+                                 height: '11px',
+                             }}
+                        >
+                            {userData.characterInfo.armorEquipment[0].quality}
+                        </div>
+                        <div className="weapon-value">
+                            {userData.characterInfo.armorEquipment[0].value}강
+                            {userData.characterInfo.armorEquipment[0].enhancementValue}
+                            <br/><img
+                            src="/cho.png"
+                            alt="초월 이미지"
+                            style={{width: '15px', height: '15px', verticalAlign: 'middle'}}
+                        />{userData.characterInfo.armorEquipment[0].transcendenceValue}
+                        </div>
+
+                        <div className="armor-helmet" style={{
+                            background: 'linear-gradient(135deg, #3d3325, #dcc999)',
+                            height: '50px',
+                            width: '50px',
+                        }}>
+                            <img src={userData.characterInfo.armorEquipment[1].icon}
+                                 style={{width: '50px', height: '50px'}}/>
+                        </div>
+                        <div className="helmet-quality"
+                             style={{
+                                 background: `linear-gradient(to right, ${
+                                     userData.characterInfo.armorEquipment[1].qualityColor
+                                 } ${userData.characterInfo.armorEquipment[1].quality}%, black ${userData.characterInfo.armorEquipment[1].quality}%)`,
+                                 width: '50px',
+                                 height: '11px',
+                             }}
+                        >
+                            {userData.characterInfo.armorEquipment[1].quality}
+                        </div>
+                        <div className="helmet-value">
+                            {userData.characterInfo.armorEquipment[1].value}강
+                            {userData.characterInfo.armorEquipment[1].enhancementValue}
+                            <br/><img
+                            src="/cho.png"
+                            alt="초월 이미지"
+                            style={{width: '15px', height: '15px', verticalAlign: 'middle'}}
+                        />{userData.characterInfo.armorEquipment[1].transcendenceValue}
+                        </div>
+
+                        <div className="armor-Shoulder" style={{
+                            background: 'linear-gradient(135deg, #3d3325, #dcc999)',
+                            height: '50px',
+                            width: '50px',
+                        }}>
+                            <img src={userData.characterInfo.armorEquipment[5].icon}
+                                 style={{width: '50px', height: '50px'}}/>
+                        </div>
+                        <div className="shoulder-quality"
+                             style={{
+                                 background: `linear-gradient(to right, ${
+                                     userData.characterInfo.armorEquipment[5].qualityColor
+                                 } ${userData.characterInfo.armorEquipment[5].quality}%, black ${userData.characterInfo.armorEquipment[5].quality}%)`,
+                                 width: '50px',
+                                 height: '11px',
+                             }}
+                        >
+                            {userData.characterInfo.armorEquipment[5].quality}
+                        </div>
+                        <div className="shoulder-value">
+                            {userData.characterInfo.armorEquipment[5].value}강
+                            {userData.characterInfo.armorEquipment[5].enhancementValue}
+                            <br/><img
+                            src="/cho.png"
+                            alt="초월 이미지"
+                            style={{width: '15px', height: '15px', verticalAlign: 'middle'}}
+                        />{userData.characterInfo.armorEquipment[5].transcendenceValue}
+                        </div>
+
+                        <div className="armor-top" style={{
+                            background: 'linear-gradient(135deg, #3d3325, #dcc999)',
+                            height: '50px',
+                            width: '50px',
+                        }}>
+                            <img src={userData.characterInfo.armorEquipment[2].icon}
+                                 style={{width: '50px', height: '50px'}}/>
+                        </div>
+                        <div className="top-quality"
+                             style={{
+                                 background: `linear-gradient(to right, ${
+                                     userData.characterInfo.armorEquipment[2].qualityColor
+                                 } ${userData.characterInfo.armorEquipment[2].quality}%, black ${userData.characterInfo.armorEquipment[2].quality}%)`,
+                                 width: '50px',
+                                 height: '11px',
+                             }}
+                        >
+                            {userData.characterInfo.armorEquipment[2].quality}
+                        </div>
+                        <div className="top-value">
+                            {userData.characterInfo.armorEquipment[2].value}강
+                            {userData.characterInfo.armorEquipment[2].enhancementValue}
+                            <br/><img
+                            src="/cho.png"
+                            alt="초월 이미지"
+                            style={{width: '15px', height: '15px', verticalAlign: 'middle'}}
+                        />{userData.characterInfo.armorEquipment[2].transcendenceValue}
+                        </div>
+
+                        <div className="armor-bottom" style={{
+                            background: 'linear-gradient(135deg, #3d3325, #dcc999)',
+                            height: '50px',
+                            width: '50px',
+                        }}>
+                            <img src={userData.characterInfo.armorEquipment[3].icon}
+                                 style={{width: '50px', height: '50px'}}/>
+                        </div>
+                        <div className="bottom-quality"
+                             style={{
+                                 background: `linear-gradient(to right, ${
+                                     userData.characterInfo.armorEquipment[3].qualityColor
+                                 } ${userData.characterInfo.armorEquipment[3].quality}%, black ${userData.characterInfo.armorEquipment[3].quality}%)`,
+                                 width: '50px',
+                                 height: '11px',
+                             }}
+                        >
+                            {userData.characterInfo.armorEquipment[3].quality}
+                        </div>
+                        <div className="bottom-value">
+                            {userData.characterInfo.armorEquipment[3].value}강
+                            {userData.characterInfo.armorEquipment[3].enhancementValue}
+                            <br/><img
+                            src="/cho.png"
+                            alt="초월 이미지"
+                            style={{width: '15px', height: '15px', verticalAlign: 'middle'}}
+                        />{userData.characterInfo.armorEquipment[3].transcendenceValue}
+                        </div>
+
+                        <div className="armor-glove" style={{
+                            background: 'linear-gradient(135deg, #3d3325, #dcc999)',
+                            height: '50px',
+                            width: '50px',
+                        }}>
+                            <img src={userData.characterInfo.armorEquipment[4].icon}
+                                 style={{width: '50px', height: '50px'}}/>
+                        </div>
+                        <div className="glove-quality"
+                             style={{
+                                 background: `linear-gradient(to right, ${
+                                     userData.characterInfo.armorEquipment[4].qualityColor
+                                 } ${userData.characterInfo.armorEquipment[4].quality}%, black ${userData.characterInfo.armorEquipment[4].quality}%)`,
+                                 width: '50px',
+                                 height: '11px',
+                             }}
+                        >
+                            {userData.characterInfo.armorEquipment[4].quality}
+                        </div>
+                        <div className="glove-value">
+                            {userData.characterInfo.armorEquipment[4].value}강
+                            {userData.characterInfo.armorEquipment[4].enhancementValue}
+                            <br/><img
+                            src="/cho.png"
+                            alt="초월 이미지"
+                            style={{width: '15px', height: '15px', verticalAlign: 'middle'}}
+                        />{userData.characterInfo.armorEquipment[4].transcendenceValue}
+                        </div>
+
+                        <div className="accesory-neck" style={{
+                            background: 'linear-gradient(135deg, #3d3325, #dcc999)',
+                            height: '50px',
+                            width: '50px',
+                        }}>
+                            <img src={userData.characterInfo.accesoryEquipment[0].icon}
+                                 style={{width: '50px', height: '50px'}}/>
+                        </div>
+                        <div className="neck-value">
+                            {userData.characterInfo.accesoryEquipment[0].value}+
+                            <br/>
+                        </div>
+
+                        <div className="accesory-ear1" style={{
+                            background: 'linear-gradient(135deg, #3d3325, #dcc999)',
+                            height: '50px',
+                            width: '50px',
+                        }}>
+                            <img src={userData.characterInfo.accesoryEquipment[1].icon}
+                                 style={{width: '50px', height: '50px'}}/>
+                        </div>
+                        <div className="ear1-value">
+                            {userData.characterInfo.accesoryEquipment[1].value}+
+                            <br/>
+                        </div>
+                        <div className="accesory-ear2" style={{
+                            background: 'linear-gradient(135deg, #3d3325, #dcc999)',
+                            height: '50px',
+                            width: '50px',
+                        }}>
+                            <img src={userData.characterInfo.accesoryEquipment[2].icon}
+                                 style={{width: '50px', height: '50px'}}/>
+                        </div>
+                        <div className="ear2-value">
+                            {userData.characterInfo.accesoryEquipment[2].value}+
+                            <br/>
+                        </div>
+                        <div className="accesory-ring1" style={{
+                            background: 'linear-gradient(135deg, #3d3325, #dcc999)',
+                            height: '50px',
+                            width: '50px',
+                        }}>
+                            <img src={userData.characterInfo.accesoryEquipment[3].icon}
+                                 style={{width: '50px', height: '50px'}}/>
+                        </div>
+                        <div className="ring1-value">
+                            {userData.characterInfo.accesoryEquipment[3].value}+
+                            <br/>
+                        </div>
+                        <div className="accesory-ring2" style={{
+                            background: 'linear-gradient(135deg, #3d3325, #dcc999)',
+                            height: '50px',
+                            width: '50px',
+                        }}>
+                            <img src={userData.characterInfo.accesoryEquipment[4].icon}
+                                 style={{width: '50px', height: '50px'}}/>
+                        </div>
+                        <div className="ring2-value">
+                            {userData.characterInfo.accesoryEquipment[4].value}+
+                            <br/>
+                        </div>
+                        <div className="accesory-bracelet" style={{
+                            background: 'linear-gradient(135deg, #3d3325, #dcc999)',
+                            height: '50px',
+                            width: '50px',
+                        }}>
+                            <img src={userData.characterInfo.accesoryEquipment[6].icon}
+                                 style={{width: '50px', height: '50px'}}/>
+                        </div>
+
+                        <div className="accesory-stone" style={{
+                            background: 'linear-gradient(135deg, #3d3325, #dcc999)',
+                            height: '50px',
+                            width: '50px',
+                        }}>
+                            <img src={userData.characterInfo.accesoryEquipment[5].icon}
+                                 style={{width: '50px', height: '50px'}}/>
+                        </div>
+
+
+                        <div className="character-image" style={{
+                            backgroundImage: `url(${userData.loaCharacter.armoryProfile.characterImage})`
+                        }}>
+                        </div>
+                        <div className="item-level">
+                            {userData.loaCharacter.armoryProfile.itemMaxLevel}
+                        </div>
+
+                        {userData.characterInfo.arkPassiveStats.map((stat, index) => (
+                            <React.Fragment key={index}>
+                                <div className={`ArkPassiveStat-${index + 1}`}>
+                                    {stat.value}
+                                </div>
+                            </React.Fragment>
+                        ))}
+
+                        {userData.characterInfo.basicStats.map((basicStats, index) => (
+                            <React.Fragment key={index}>
+                                <div className={`BasicStatType-${index + 1}`}>
+                                    {basicStats.type}
+                                </div>
+                                <div className={`BasicStatValue-${index + 1}`}>
+                                    {basicStats.value}
+                                </div>
+                            </React.Fragment>
+                        ))}
+
+                        {userData.characterInfo.stats.map((stat, index) => (
+                            <React.Fragment key={index}>
+                                <div className={`StatType-${index + 1}`}>
+                                    {stat.type}
+                                </div>
+                                <div className={`StatValue-${index + 1}`}>
+                                    {stat.value}
+                                </div>
+                            </React.Fragment>
+                        ))}
+
+                        <div className="Engraving0">
+                            {userData.characterInfo.ownEngraving}
+                        </div>
+                        {userData.characterInfo.engravings.map((engraving, index) => {
+                            const isLegendary = engraving.grade === "전설";
+                            const isRelic = engraving.grade === "유물";
+
+                            return (
+                                <React.Fragment key={engraving.name}>
+                                    <div className={`Engraving${index + 1}`}>
+                                        {/* 등급에 따라 색깔과 숫자 추가 */}
+                                        {(isLegendary || isRelic) && (
+                                            <span
+                                                style={{
+                                                    display: "inline-block",
+                                                    width: "20px",
+                                                    height: "20px",
+                                                    backgroundColor: isRelic ? "rgb(254,96,0)" : "rgb(233,136,0)",
+                                                    color: "black",
+                                                    textAlign: "center",
+                                                    lineHeight: "20px",
+                                                    marginRight: "5px",
+                                                }}
+                                            >
+                        {engraving.level}
+                    </span>
+                                        )}
+                                        <span style={{color: isRelic ? "rgb(254,96,0)" : "rgb(233,136,0)"}}>
+                                            {engraving.name}
+                                        </span>
+
+                                    </div>
+                                </React.Fragment>
+                            );
+                        })}
                     </div>
                 </div>
+                    <div className="box2">
+                        asd
+                    </div>
+                </>
 
             ) : (
                 <div className="box">시부레</div>

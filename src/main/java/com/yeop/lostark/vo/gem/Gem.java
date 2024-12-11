@@ -9,9 +9,12 @@ import java.util.Map;
 @Getter
 @Setter
 public class Gem {
-    private int guphwa = 0;
-    private int jakyeol = 0;
-    private int myulhwa = 0;
-    private int hongyeom = 0;
-    private Map<String, Integer> map;
+    private String name = "";
+    private int count = 0;
+    private double average = 0.0;
+
+    public Gem(String name){
+        this.name = name;
+    }
+
 }

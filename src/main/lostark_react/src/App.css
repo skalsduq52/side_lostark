@@ -6,6 +6,9 @@ body {
   font-family: 'nanumsquare', 'serif';
   background: black;
   color: white;
+  min-width: 1000px; /* 최소 너비를 box 크기와 일치 */
+  min-height: 700px; /* 최소 높이를 box 크기와 일치 */
+  overflow: auto; /* 스크롤 활성화 */
 }
 
 a{
@@ -15,42 +18,40 @@ a{
 }
 
 .center-container{
-  display: flex;
+  display: grid;
+  grid-template-columns: 1000px 300px;
   justify-content: center;
-  padding-top: 40px;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  gap: 20px;
+  padding-top: 20px;
   width: 100%;
   height: 100%;
 }
 
 
 .box {
-  justify-content: center;
-  border : 1px solid white;
-  border-radius : 10px;
-  width : 1000px;
-  height : 700px;
+  position: relative; /* 기준 위치 */
+  width: 1000px; /* 고정된 너비 */
+  height: 700px; /* 고정된 높이 */
+  margin: 0 auto; /* 가로 중앙 정렬 */
+  border: 1px solid white;
+  border-radius: 10px;
+  overflow: hidden; /* 배경이 박스 밖으로 넘어가지 않도록 설정 */
+  background-color: black; /* 선택 사항 */
+}
+.box2 {
+  flex-shrink: 0;
+  position: relative; /* 기준 위치 */
+  width: 300px; /* 고정된 너비 */
+  height: 700px; /* 고정된 높이 */
+  margin: 0; /* 가로 중앙 정렬 */
+  border: 1px solid white;
+  border-radius: 10px;
+  overflow: hidden; /* 배경이 박스 밖으로 넘어가지 않도록 설정 */
+  background-color: black; /* 선택 사항 */
 }
 
-.box-contents {
-  display: grid; /* Grid 레이아웃 사용 */
-  grid-template-rows: auto auto; /* 2행으로 나누기, 각 행은 동일 높이 */
-  gap: 10px; /* 각 셀 간의 간격 설정 */
-  width: 100%; /* 전체 너비를 차지하도록 설정 */
-  box-sizing: border-box; /* 패딩과 테두리를 포함한 박스 크기 계산 */
-}
-
-.first-row {
-  display: grid;
-  grid-template-columns: 310px 520px 140px; /* 첫 번째 행의 열 크기 지정 */
-  gap: 10px; /* 첫 번째 행의 열 간격 */
-}
-
-/* 두 번째 행 */
-.second-row {
-  display: grid;
-  grid-template-columns: 140px 200px 620px; /* 두 번째 행의 열 크기 지정 */
-  gap: 10px; /* 두 번째 행의 열 간격 */
-}
 
 .character-info1 {
   width: 100%;
@@ -60,320 +61,812 @@ a{
   padding-top: 5px;
   background: #1d1e1f;
   box-sizing: border-box;
-  font-size: 20px; /* 글자 크기 조정 */
-  font-weight: bold; /* 글자 굵기 조정 */
-  display: flex; /* 이미지와 텍스트 수평 정렬 */
-  align-items: center; /* 수직 중앙 정렬 */
-  border-radius : 10px;
-}
-
-.character-info2 {
-  width: 300px;
-  height: 300px;
+  font-size: 20px;
+  font-weight: bold;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-top: 20px;
-  padding-left: 10px;
-  box-sizing: border-box;
-  overflow: hidden;
+  border-radius: 10px 10px 0 0;
+  z-index: 2; /* 배경 위에 표시되도록 설정 */
 }
 
-.character-info4 {
-  width: 130px;
-  height: 300px;
-  display: flex;
-  flex-direction: column; /* 수직 정렬 */
-  justify-content: flex-start; /* 자식 요소들을 위쪽으로 정렬 */
-  align-items: flex-start; /* 왼쪽 정렬 */
-  margin-top: 20px;
-  padding: 20px; /* 내부 여백 설정 */
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  border-radius: 10px;
-  background: #15181D;
+.box-background {
+  flex-grow: 1; /* 남은 공간을 채우도록 설정 */
+  background-image: url('../public/back.png'); /* 배경 이미지 경로 */
+  background-size: 100% 100%; /* 배경 이미지 크기 조정 */
+  background-position: center; /* 배경 이미지 중앙 정렬 */
+  background-repeat: no-repeat; /* 배경 이미지 반복 제거 */
+  z-index: 1; /* character-info1 아래 배경 */
+  position: absolute;
+  top: 45px; /* character-info1 높이만큼 아래로 배치 */
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
-.character-info5 {
-  width: 520px;
-  height: 300px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start; /* 자식 요소들을 위쪽으로 정렬 */
-  margin-top: 20px;
-  padding: 10px; /* 내부 여백 설정 */
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  border-radius: 10px;
-  background: #15181D;
+.expedition {
+  position: absolute;
+  left: 36px; /* x좌표 */
+  top: 85px; /* y좌표 */
+  width: 50px; /* x2 - x1 */
+  height: 40px; /* y2 - y1 */
+  text-align: left;
+
+  font-family: 'Nanum Gothic', sans-serif; /* 기본 폰트 */
+  font-size: 24px; /* 텍스트 크기 */
+  font-weight: bold; /* 굵은 텍스트 */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
+  color : rgb(215, 126, 0);
 }
 
-.character-info6 {
-  width: 130px;
-  height: 300px;
-  display: grid;
-  margin-top: 10px;
-  margin-left: 10px;
-  padding: 10px; /* 내부 여백 설정 */
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  border-radius: 10px;
-  background: #15181D;
+.character-title {
+  position: absolute;
+  left: 20px; /* x좌표 */
+  top: 220px; /* y좌표 */
+  width: 280px; /* x2 - x1 */
+  height: 30px; /* y2 - y1 */
+
 }
 
-.elxir, .card {
+.character-classname {
+  position: absolute;
+  left: 50px; /* x좌표 */
+  top: 30px; /* y좌표 */
+  width: 300px; /* x2 - x1 */
+  height: 28px; /* y2 - y1 */
+  text-align: center;
 
-  display: flex;               /* 이미지와 텍스트를 수평으로 정렬 */
-  align-items: center;         /* 수직 중앙 정렬 */
-  padding: 10px;               /* 여백 추가 */
-  box-sizing: border-box;      /* 패딩과 테두리를 포함한 크기 계산 */
+  font-family: 'Nanum Gothic', 'Noto Sans', sans-serif; /* 예시 폰트 */
+  font-size: 24px;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 그림자 효과 */
+  -webkit-text-stroke: 1px white; /* 외곽선 */
+
+  padding: 5px;
+
 }
 
-.elxir, .card {
-  font-size: 20px; /* 글자 크기 조정 */
-  font-weight: bold; /* 글자 굵기 조정 */
-  display: flex; /* 이미지와 텍스트 수평 정렬 */
-  align-items: center; /* 수직 중앙 정렬 */
+.character-serverName {
+  position: absolute;
+  left: 510px; /* x좌표 */
+  top: 15px; /* y좌표 */
+  width: 280px; /* x2 - x1 */
+  height: 40px; /* y2 - y1 */
+  color: rgb(122,148,162);
+}
+
+.gem {
+  position: absolute;
+  left: 5px; /* x좌표 */
+  top: 145px; /* y좌표 */
+  /* y2 - y1 */
+}
+.gemName {
+  position: absolute;
+  left: 27px; /* x좌표 */
+  top: 148px; /* y좌표 */
+  width: 60px; /* x2 - x1 */
+  height: 20px; /* y2 - y1 */
+
+  font-family: 'Noto Sans', 'Nanum Gothic', sans-serif; /* 대체 가능한 서체 */
+  font-size: 14px; /* 글자 크기 */
+  color: rgb(219,192,155);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  font-weight: bold;
+}
+.gemValue-1 {
+  position: absolute;
+  left: 20px; /* x좌표 */
+  top: 185px; /* y좌표 */
+  width: 280px; /* x2 - x1 */
+  height: 30px; /* y2 - y1 */
+
+  color: rgb(219,192,155);
+}
+.gemValue-2 {
+  position: absolute;
+  left: 15px; /* x좌표 */
+  top: 218px; /* y좌표 */
+  width: 280px; /* x2 - x1 */
+  height: 30px; /* y2 - y1 */
+
+  color: rgb(219,192,155);
+}
+
+
+.elxir {
+  position: absolute;
+  left: 5px; /* x좌표 */
+  top: 258px; /* y좌표 */
+  /* y2 - y1 */
+}
+.elxirName {
+  position: absolute;
+  left: 30px; /* x좌표 */
+  top: 260px; /* y좌표 */
+  width: 60px; /* x2 - x1 */
+  height: 20px; /* y2 - y1 */
+
+  font-family: 'Noto Sans', 'Nanum Gothic', sans-serif; /* 대체 가능한 서체 */
+  font-weight: 400; /* 보통 두께 */
+  font-size: 14px; /* 글자 크기 */
+  color: greenyellow; /* 밝은 회색 */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  font-weight: bold;
+}
+.elxirValue {
+  position: absolute;
+  left: 20px; /* x좌표 */
+  top: 295px; /* y좌표 */
+  width: 280px; /* x2 - x1 */
+  height: 30px; /* y2 - y1 */
+
+  color: greenyellow; /* 밝은 회색 */
 }
 
 .card {
-  border-top: 1px solid #ccc;  /* 구분을 위한 상단 테두리 추가 */
+  position: absolute;
+  left: 8px; /* x좌표 */
+  top: 410px; /* y좌표 */
+  /* y2 - y1 */
+}
+.cardName {
+  position: absolute;
+  left: 22px; /* x좌표 */
+  top: 413px; /* y좌표 */
+  width: 60px; /* x2 - x1 */
+  height: 20px; /* y2 - y1 */
+
+  font-family: 'Noto Sans', 'Nanum Gothic', sans-serif; /* 대체 가능한 서체 */
+  font-size: 14px; /* 글자 크기 */
+  color: rgb(180,68,0); /* 밝은 회색 */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  font-weight: bold;
+}
+.cardValue-1 {
+  position: absolute;
+  left: 20px; /* x좌표 */
+  top: 450px; /* y좌표 */
+  width: 280px; /* x2 - x1 */
+  height: 393px; /* y2 - y1 */
+}
+.cardValue-2 {
+  position: absolute;
+  left: 20px; /* x좌표 */
+  top: 480px; /* y좌표 */
+  width: 280px; /* x2 - x1 */
+  height: 393px; /* y2 - y1 */
 }
 
-.character-info6 dl {
-  margin: 10px 0; /* dl 요소 간의 간격 설정 */
-  padding: 0; /* 기본 패딩 제거 */
-  text-align: left;
+.synergy {
+  position: absolute;
+  left: 6px; /* x좌표 */
+  top: 520px; /* y좌표 */
+  /* y2 - y1 */
 }
+.synergyName {
+  position: absolute;
+  left: 28px; /* x좌표 */
+  top: 524px; /* y좌표 */
+  width: 60px; /* x2 - x1 */
+  height: 20px; /* y2 - y1 */
 
-.character-info6 dl dd {
-  margin: 0; /* dd 기본 마진 제거 */
-  padding: 0; /* dd 기본 패딩 제거 */
-  text-align: left; /* 텍스트 왼쪽 정렬 */
-  flex-grow: 1; /* dd가 남은 공간을 차지하도록 설정 */
+  font-family: 'Noto Sans', 'Nanum Gothic', sans-serif; /* 대체 가능한 서체 */
+  font-size: 14px; /* 글자 크기 */
+  color: blueviolet; /* 밝은 회색 */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  font-weight: bold;
 }
-
-.character-info7 {
-  width: 610px;
-  height: 300px;
-  display: flex;
-  flex-direction: column; /* 수직 정렬 */
-  justify-content: flex-start; /* 자식 요소들을 위쪽으로 정렬 */
-  align-items: flex-start; /* 왼쪽 정렬 */
-  margin-top: 10px;
-  margin-left: 10px;
-  padding: 20px; /* 내부 여백 설정 */
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  border-radius: 10px;
-  background: #15181D;
+.synergyValue-1 {
+  position: absolute;
+  left: 20px; /* x좌표 */
+  top: 560px; /* y좌표 */
+  width: 280px; /* x2 - x1 */
+  height: 393px; /* y2 - y1 */
+  color: blueviolet;
 }
-
-.character-info8 {
-  width: 190px;
-  height: 300px;
-  display: flex;
-  flex-direction: column; /* 수직 정렬 */
-  justify-content: flex-start; /* 자식 요소들을 위쪽으로 정렬 */
-  align-items: flex-start; /* 왼쪽 정렬 */
-  margin-top: 10px;
-  margin-left: 10px;
-  padding: 20px; /* 내부 여백 설정 */
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  border-radius: 10px;
-  background: #15181D;
-}
-
-.choweol {
-  font-size: 20px; /* 글자 크기 조정 */
-  font-weight: bold; /* 글자 굵기 조정 */
-  margin-bottom: 15px; /* 아래 dl과의 간격 설정 */
-  display: flex; /* 이미지와 텍스트 수평 정렬 */
-  align-items: center; /* 수직 중앙 정렬 */
+.synergyValue-2 {
+  position: absolute;
+  left: 20px; /* x좌표 */
+  top: 590px; /* y좌표 */
+  width: 280px; /* x2 - x1 */
+  height: 393px; /* y2 - y1 */
+  color: blueviolet;
 }
 
 
-
-.characterInfo {
-  font-size: 20px; /* 글자 크기 조정 */
-  font-weight: bold; /* 글자 굵기 조정 */
-  margin-bottom: 10px;
+.cho {
+  position: absolute;
+  left: 5px; /* x좌표 */
+  top: 335px; /* y좌표 */
+  /* y2 - y1 */
 }
+.choName {
+  position: absolute;
+  left: 22px; /* x좌표 */
+  top: 338px; /* y좌표 */
+  width: 60px; /* x2 - x1 */
+  height: 20px; /* y2 - y1 */
 
-.characterInfo-stat {
-  font-size: 15px; /* 글자 크기 조정 */
-  font-weight: bold; /* 글자 굵기 조정 */
-  margin-bottom: 10px;
-  text-align: left;
-}
-
-.info-details {
-  display: grid;
-  grid-template-columns: 115px 115px 115px 115px;
-  flex-direction: column; /* 세로로 정렬 */
-  gap: 10px; /* 각 요소 간의 간격 */
-  width: 100%; /* 전체 너비 */
-}
-.info-items {
-  padding: 10px; /* 내부 여백 */
-  border: 1px solid #ddd; /* 각 아이템의 테두리 */ /* 각 아이템의 배경색 */
-  box-sizing: border-box;
-  height: 220px;/* 패딩과 테두리를 포함한 크기 계산 */
+  font-family: 'Noto Sans', 'Nanum Gothic', sans-serif; /* 대체 가능한 서체 */
+  font-weight: bold;
+  font-size: 14px; /* 글자 크기 */
+  color: yellow; /* 밝은 회색 */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
-.info-items dl {
-  display: flex;            /* Flexbox 사용 */
-  align-items: center;      /* 수직 중앙 정렬 */
-  flex-wrap: wrap;          /* 줄 바꿈 허용 */
-  margin-bottom: 0;
-  margin-top: 0;/* dl 기본 마진 제거 */
-  padding: 0;               /* dl 기본 패딩 제거 */
+.choValue {
+  position: absolute;
+  left: 20px; /* x좌표 */
+  top: 370px; /* y좌표 */
+  width: 280px; /* x2 - x1 */
+  height: 30px; /* y2 - y1 */
+
+  color: yellow; /* 밝은 회색 */
+
 }
 
-.info-items dt,
-.info-items dd {
-  display: inline-block;    /* 수평 정렬을 위해 inline-block 사용 */
-  margin: 0;                /* 기본 마진 제거 */
-  padding: 5px 10px;        /* 약간의 여백 설정 */
-  font-size: 13px;
-}
-.info-items dt {
-  font-weight: bold;        /* 제목 부분 강조 */
-  min-width: 80px;          /* 최소 너비 설정으로 간격 확보 */
-  text-align: left;         /* 텍스트 왼쪽 정렬 */
+
+.character-name {
+  position: absolute;
+  left: 65px; /* x좌표 */
+  top: 88px; /* y좌표 */
+  width: 280px; /* x2 - x1 */
+  height: 40px; /* y2 - y1 */
+  font-family: 'Nanum Gothic', 'Noto Sans', sans-serif; /* 예시 폰트 */
+  font-size: 15px;
+  color: white;
 }
 
-.info-items dd {
-  text-align: left;         /* 텍스트 왼쪽 정렬 */
+.character-level {
+  position: absolute;
+  left: 65px; /* x좌표 */
+  top: 108px; /* y좌표 */
+  width: 280px; /* x2 - x1 */
+  height: 40px; /* y2 - y1 */
+  font-family: 'Nanum Gothic', 'Noto Sans', sans-serif; /* 예시 폰트 */
+  font-size: 20px;
+  color: rgb(235,194,0);
 }
 
-.info-item-ark{
-  display: block;
-  border: 1px solid #ddd; /* 각 아이템의 테두리 */ /* 각 아이템의 배경색 */
-  box-sizing: border-box;
-  height: 220px;/* 패딩과 테두리를 포함한 크기 계산 */
+.character-image {
+  position: absolute;
+  left: 335px; /* x좌표 */
+  top: 80px; /* y좌표 */
+  width: 460px; /* x2 - x1 */
+  height: 510px; /* y2 - y1 */
+  background-size: cover; /* 또는 contain */
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
 }
 
-.info-item-ark {
-  display: grid;
-  border: 1px solid #ddd;
-  grid-template-columns: 1fr 1fr; /* 두 개의 열로 나눔 */
-  grid-auto-rows: max-content;    /* 자동으로 행의 높이를 설정 */
-  gap: 10px;                      /* 각 영역 간의 간격 설정 */
-  max-height: 300px;              /* 최대 높이 설정 */
-  overflow-y: auto;
-  /* 높이를 넘길 경우 스크롤 가능 */
+.item-level {
+  position: absolute;
+  left: 830px; /* x좌표 */
+  top: 130px; /* y좌표 */
+  width: 125px; /* x2 - x1 */
+  height: 40px; /* y2 - y1 */
+
+  font-family: 'Nanum Gothic', sans-serif; /* 기본 폰트 */
+  font-size: 30px; /* 텍스트 크기 */
+  font-weight: bold; /* 굵은 텍스트 */
+  color: #FFFFFF; /* 텍스트 색상 (흰색) */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8); /* 그림자 효과 */
 }
 
-.arkPassiveEffects {
-  display: contents;              /* 내부의 각 항목이 개별적으로 grid에 들어가도록 설정 */
+.ArkPassiveStat-1 {
+  position: absolute;
+  left: 486px; /* x좌표 */
+  top: 624px; /* y좌표 */
+  width: 30px; /* x2 - x1 */
+  height: 20px; /* y2 - y1 */
 }
 
-.info-item {
-  display: block;
-  padding: 10px; /* 내부 여백 */
-  border: 1px solid #ddd; /* 각 아이템의 테두리 */ /* 각 아이템의 배경색 */
-  box-sizing: border-box;
-  height: 220px;/* 패딩과 테두리를 포함한 크기 계산 */
-}
-.info-item dl {
-  margin-bottom: 5; /* dl 기본 마진 제거 */
-  padding: 0; /* dl 기본 패딩 제거 */
+.ArkPassiveStat-2 {
+  position: absolute;
+  left: 572px; /* x좌표 */
+  top: 624px; /* y좌표 */
+  width: 30px; /* x2 - x1 */
+  height: 20px; /* y2 - y1 */
 }
 
-.info-item dt {
-  margin: 0; /* dt 기본 마진 제거 */
-  padding: 1px 0; /* 필요 시 내부 여백 설정 */
-  font-weight: bold; /* 제목 부분 강조 */
-  text-align: left; /* 텍스트 왼쪽 정렬 */
+.ArkPassiveStat-3 {
+  position: absolute;
+  left: 655px; /* x좌표 */
+  top: 624px; /* y좌표 */
+  width: 30px; /* x2 - x1 */
+  height: 20px; /* y2 - y1 */
 }
 
-.info-item dd {
-  margin: 0; /* dd 기본 마진 제거 */
-  padding: 1px 0; /* 필요 시 내부 여백 설정 */
-  text-align: left; /* 텍스트 왼쪽 정렬 */
-  margin-left: 0; /* dd 기본 들여쓰기 제거 */
-}
-
-.info-detail {
-  display: grid;
-  grid-template-columns: 220px 340px;
-  flex-direction: column; /* 세로로 정렬 */
-  gap: 10px; /* 각 요소 간의 간격 */
-  width: 100%; /* 전체 너비 */
-}
-
-.character-info4 dl {
-  margin: 10px 0; /* dl 요소 간의 간격 설정 */
-  padding: 0; /* 기본 패딩 제거 */
-}
-
-.arkPassiveEffects{
-  font-size: 12px;
-}
-
-.character-info4 dl dd {
-  margin: 0; /* dd 기본 마진 제거 */
-  padding: 0; /* dd 기본 패딩 제거 */
-  text-align: left; /* 텍스트 왼쪽 정렬 */
-  flex-grow: 1; /* dd가 남은 공간을 차지하도록 설정 */
-}
-
-.character-info3 {
-  display: flex; /* Flexbox로 설정하여 자식 요소를 수평 배치 */
-  align-items: center; /* 수직 중앙 정렬 */
-  width: 400px;
-  height: 300px; /* 컨테이너 높이 설정 */
-  border: 1px solid #ccc; /* 외곽선 추가 */
-  border-radius : 10px;
-  box-sizing: border-box;
+.armor-weapon{
+  position: absolute;
+  left: 347px; /* x좌표 */
+  top: 445px; /* y좌표 */
+  border: 1px solid white;
+  border-radius: 8px; /* 원하는 정도로 조정 가능 */
   overflow: hidden;
+  z-index: 2;
 }
 
-.detail-image {
-  width: 100%;
-  height: auto;
-  border-radius : 5px;
+.weapon-quality{
+  position: absolute;
+  left: 347px; /* x좌표 */
+  top: 488px; /* y좌표 */
+  border: 1px solid white;
+  border-radius: 8px; /* 원하는 정도로 조정 가능 */
+
+  font-family: 'Noto Sans KR', sans-serif; /* 예시 폰트, 실제 적용하려면 확인 필요 */
+  font-size: 10px; /* 텍스트 크기 */
+  font-weight: 600; /* 글자 두께 (600은 Bold) */
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+.weapon-value{
+  position: absolute;
+  left: 405px; /* x좌표 */
+  top: 450px; /* y좌표 */
+  width: 50px; /* x2 - x1 */
+  height: 40px; /* y2 - y1 */
+  text-align: left;
+  font-size: 10px;
+  z-index: 2;
 }
 
-.character-info3 .info-content {
-  width: 50%; /* 텍스트 내용이 차지하는 영역 */
-  padding: 20px; /* 내부 여백 */
-  box-sizing: border-box; /* 패딩 포함하여 박스 크기 계산 */
-  background: #15181D;
-  text-overflow: ellipsis;
+.armor-helmet{
+  position: absolute;
+  left: 347px; /* x좌표 */
+  top: 105px; /* y좌표 */
+  border: 1px solid white;
+  border-radius: 8px; /* 원하는 정도로 조정 가능 */
+  overflow: hidden;
+  z-index: 2;
+}
+.helmet-quality{
+  position: absolute;
+  left: 347px; /* x좌표 */
+  top: 148px; /* y좌표 */
+  border: 1px solid white;
+  border-radius: 8px; /* 원하는 정도로 조정 가능 */
+
+  font-family: 'Noto Sans KR', sans-serif; /* 예시 폰트, 실제 적용하려면 확인 필요 */
+  font-size: 10px; /* 텍스트 크기 */
+  font-weight: 600; /* 글자 두께 (600은 Bold) */
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+.helmet-value{
+  position: absolute;
+  left: 405px; /* x좌표 */
+  top: 110px; /* y좌표 */
+  width: 50px; /* x2 - x1 */
+  height: 40px; /* y2 - y1 */
+  text-align: left;
+  font-size: 10px;
+  z-index: 2;
+}
+
+.armor-Shoulder{
+  position: absolute;
+  left: 347px; /* x좌표 */
+  top: 171px; /* y좌표 */
+  border: 1px solid white;
+  border-radius: 8px; /* 원하는 정도로 조정 가능 */
+  overflow: hidden;
+  z-index: 2;
+}
+.shoulder-quality{
+  position: absolute;
+  left: 347px; /* x좌표 */
+  top: 214px; /* y좌표 */
+  border: 1px solid white;
+  border-radius: 8px; /* 원하는 정도로 조정 가능 */
+
+  font-family: 'Noto Sans KR', sans-serif; /* 예시 폰트, 실제 적용하려면 확인 필요 */
+  font-size: 10px; /* 텍스트 크기 */
+  font-weight: 600; /* 글자 두께 (600은 Bold) */
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+.shoulder-value{
+  position: absolute;
+  left: 405px; /* x좌표 */
+  top: 175px; /* y좌표 */
+  width: 50px; /* x2 - x1 */
+  height: 40px; /* y2 - y1 */
+  text-align: left;
+  font-size: 10px;
+  z-index: 2;
+}
+
+.armor-top{
+  position: absolute;
+  left: 347px; /* x좌표 */
+  top: 240px; /* y좌표 */
+  border: 1px solid white;
+  border-radius: 8px; /* 원하는 정도로 조정 가능 */
+  overflow: hidden;
+  z-index: 2;
+}
+.top-quality{
+  position: absolute;
+  left: 347px; /* x좌표 */
+  top: 283px; /* y좌표 */
+  border: 1px solid white;
+  border-radius: 8px; /* 원하는 정도로 조정 가능 */
+
+  font-family: 'Noto Sans KR', sans-serif; /* 예시 폰트, 실제 적용하려면 확인 필요 */
+  font-size: 10px; /* 텍스트 크기 */
+  font-weight: 600; /* 글자 두께 (600은 Bold) */
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+.top-value{
+  position: absolute;
+  left: 405px; /* x좌표 */
+  top: 245px; /* y좌표 */
+  width: 50px; /* x2 - x1 */
+  height: 40px; /* y2 - y1 */
+  text-align: left;
+  font-size: 10px;
+  z-index: 2;
+}
+
+.armor-bottom{
+  position: absolute;
+  left: 347px; /* x좌표 */
+  top: 308px; /* y좌표 */
+  border: 1px solid white;
+  border-radius: 8px; /* 원하는 정도로 조정 가능 */
+  overflow: hidden;
+  z-index: 2;
+}
+.bottom-value{
+  position: absolute;
+  left: 405px; /* x좌표 */
+  top: 315px; /* y좌표 */
+  width: 50px; /* x2 - x1 */
+  height: 40px; /* y2 - y1 */
+  text-align: left;
+  font-size: 10px;
+  z-index: 2;
+}
+
+.bottom-quality{
+  position: absolute;
+  left: 347px; /* x좌표 */
+  top: 351px; /* y좌표 */
+  border: 1px solid white;
+  border-radius: 8px; /* 원하는 정도로 조정 가능 */
+
+  font-family: 'Noto Sans KR', sans-serif; /* 예시 폰트, 실제 적용하려면 확인 필요 */
+  font-size: 10px; /* 텍스트 크기 */
+  font-weight: 600; /* 글자 두께 (600은 Bold) */
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
+.armor-glove{
+  position: absolute;
+  left: 347px; /* x좌표 */
+  top: 376px; /* y좌표 */
+  border: 1px solid white;
+  border-radius: 8px; /* 원하는 정도로 조정 가능 */
+  overflow: hidden;
+  z-index: 2;
+}
+.glove-quality{
+  position: absolute;
+  left: 347px; /* x좌표 */
+  top: 419px; /* y좌표 */
+  border: 1px solid white;
+  border-radius: 8px; /* 원하는 정도로 조정 가능 */
+
+  font-family: 'Noto Sans KR', sans-serif; /* 예시 폰트, 실제 적용하려면 확인 필요 */
+  font-size: 10px; /* 텍스트 크기 */
+  font-weight: 600; /* 글자 두께 (600은 Bold) */
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+.glove-value{
+  position: absolute;
+  left: 405px; /* x좌표 */
+  top: 380px; /* y좌표 */
+  width: 50px; /* x2 - x1 */
+  height: 40px; /* y2 - y1 */
+  text-align: left;
+  font-size: 10px;
+  z-index: 2;
+}
+
+.accesory-neck{
+  position: absolute;
+  left: 738px; /* x좌표 */
+  top: 102px; /* y좌표 */
+  border: 1px solid white;
+  border-radius: 8px; /* 원하는 정도로 조정 가능 */
+  overflow: hidden;
+  z-index: 2;
+}
+.neck-value{
+  position: absolute;
+  left: 682px; /* x좌표 */
+  top: 105px; /* y좌표 */
+  width: 50px; /* x2 - x1 */
+  height: 40px; /* y2 - y1 */
+  text-align: right;
+  font-size: 10px;
+  z-index: 2;
+
+}
+
+.accesory-ear1{
+  position: absolute;
+  left: 738px; /* x좌표 */
+  top: 172px; /* y좌표 */
+  border: 1px solid white;
+  border-radius: 8px; /* 원하는 정도로 조정 가능 */
+  overflow: hidden;
+  z-index: 2;
+}
+.ear1-value{
+  position: absolute;
+  left: 682px; /* x좌표 */
+  top: 175px; /* y좌표 */
+  width: 50px; /* x2 - x1 */
+  height: 40px; /* y2 - y1 */
+  text-align: right;
+  font-size: 10px;
+  z-index: 2;
+
+}
+.accesory-ear2{
+  position: absolute;
+  left: 738px; /* x좌표 */
+  top: 240px; /* y좌표 */
+  border: 1px solid white;
+  border-radius: 8px; /* 원하는 정도로 조정 가능 */
+  overflow: hidden;
+  z-index: 2;
+}
+.ear2-value{
+  position: absolute;
+  left: 682px; /* x좌표 */
+  top: 245px; /* y좌표 */
+  width: 50px; /* x2 - x1 */
+  height: 40px; /* y2 - y1 */
+  text-align: right;
+  font-size: 10px;
+  z-index: 2;
+
+}
+.accesory-ring1{
+  position: absolute;
+  left: 738px; /* x좌표 */
+  top: 308px; /* y좌표 */
+  border: 1px solid white;
+  border-radius: 8px; /* 원하는 정도로 조정 가능 */
+  overflow: hidden;
+  z-index: 2;
+}
+.ring1-value{
+  position: absolute;
+  left: 682px; /* x좌표 */
+  top: 312px; /* y좌표 */
+  width: 50px; /* x2 - x1 */
+  height: 40px; /* y2 - y1 */
+  text-align: right;
+  font-size: 10px;
+  z-index: 2;
+}
+.accesory-ring2{
+  position: absolute;
+  left: 738px; /* x좌표 */
+  top: 377px; /* y좌표 */
+  border: 1px solid white;
+  border-radius: 8px; /* 원하는 정도로 조정 가능 */
+  overflow: hidden;
+  z-index: 2;
+}
+.ring2-value{
+  position: absolute;
+  left: 682px; /* x좌표 */
+  top: 382px; /* y좌표 */
+  width: 50px; /* x2 - x1 */
+  height: 40px; /* y2 - y1 */
+  text-align: right;
+  font-size: 10px;
+  z-index: 2;
+}
+
+.accesory-bracelet{
+  position: absolute;
+  left: 738px; /* x좌표 */
+  top: 445px; /* y좌표 */
+  border: 1px solid white;
+  border-radius: 8px; /* 원하는 정도로 조정 가능 */
+  overflow: hidden;
+  z-index: 2;
+}
+
+.accesory-stone{
+  position: absolute;
+  left: 738px; /* x좌표 */
+  top: 515px; /* y좌표 */
+  border: 1px solid white;
+  border-radius: 8px; /* 원하는 정도로 조정 가능 */
+  overflow: hidden;
+  z-index: 2;
+}
+
+
+
+.Engraving0 {
+  position: absolute;
+  left: 815px; /* x좌표 */
+  top: 460px; /* y좌표 */
+  width: 100px; /* x2 - x1 */
+  height: 25px; /* y2 - y1 */
+
+  color: greenyellow;
+  text-align: left;
+
+}
+
+.Engraving1 {
+  position: absolute;
+  left: 810px; /* x좌표 */
+  top: 490px; /* y좌표 */
+  width: 200px; /* x2 - x1 */
+  height: 25px; /* y2 - y1 */
+  text-align: left;
+  padding-left: 5px;
+}
+
+.Engraving2 {
+  position: absolute;
+  left: 810px; /* x좌표 */
+  top: 520px; /* y좌표 */
+  width: 200px; /* x2 - x1 */
+  height: 25px; /* y2 - y1 */
+  text-align: left;
+  padding-left: 5px;
+}
+
+.Engraving3 {
+  position: absolute;
+  left: 810px; /* x좌표 */
+  top: 550px; /* y좌표 */
+  width: 200px; /* x2 - x1 */
+  height: 25px; /* y2 - y1 */
+  text-align: left;
+  padding-left: 5px;
+}
+
+.Engraving4 {
+  position: absolute;
+  left: 810px; /* x좌표 */
+  top: 580px; /* y좌표 */
+  width: 200px; /* x2 - x1 */
+  height: 25px; /* y2 - y1 */
+  text-align: left;
+  padding-left: 5px;
+}
+
+.Engraving5 {
+  position: absolute;
+  left: 810px; /* x좌표 */
+  top: 610px; /* y좌표 */
+  width: 200px; /* x2 - x1 */
+  height: 25px; /* y2 - y1 */
+  text-align: left;
+  padding-left: 5px;
+}
+
+.BasicStatType-1 {
+  position: absolute;
+  left: 810px; /* x좌표 */
+  top: 225px; /* y좌표 */
+  width: 60px; /* x2 - x1 */
+  height: 25px; /* y2 - y1 */
+  font-family: 'Noto Sans Korean', sans-serif;
+  color: rgb(199,165,3);
+  font-weight: bold;
+}
+.BasicStatType-2 {
+  position: absolute;
+  left: 810px; /* x좌표 */
+  top: 260px; /* y좌표 */
+  width: 100px; /* x2 - x1 */
+  height: 25px; /* y2 - y1 */
+  font-family: 'Noto Sans Korean', sans-serif;
+  color: rgb(199,165,3);
+  font-weight: bold;
+}
+
+.BasicStatValue-1 {
+  position: absolute;
+  left: 920px; /* x좌표 */
+  top: 225px; /* y좌표 */
+  width: 60px; /* x2 - x1 */
+  height: 25px; /* y2 - y1 */
+  font-family: 'Noto Sans Korean', sans-serif;
+  color: white;
+  text-align: left;
+}
+.BasicStatValue-2 {
+  position: absolute;
+  left: 920px; /* x좌표 */
+  top: 260px; /* y좌표 */
+  width: 100px; /* x2 - x1 */
+  height: 25px; /* y2 - y1 */
+  font-family: 'Noto Sans Korean', sans-serif;
+  color: white;
   text-align: left;
 }
 
-.character-info3 .background-image {
-  width: 50%; /* 이미지가 차지하는 영역 */
-  height: 100%; /* 부모 높이 100%로 설정 */
-  background-size: cover; /* 이미지가 영역을 채우도록 설정 */
-  background-position: center; /* 이미지 중앙 정렬 */
+.StatType-1 {
+  position: absolute;
+  left: 810px; /* x좌표 */
+  top: 325px; /* y좌표 */
+  width: 40px; /* x2 - x1 */
+  height: 25px; /* y2 - y1 */
+  font-family: 'Noto Sans Korean', sans-serif;
+  color: rgb(199,165,3);
+  font-weight: bold;
 }
-.character-info3 dl {
-  flex-wrap: nowrap; /* 줄바꿈 없이 한 줄에 표시 */
-  margin: 0; /* dl 기본 마진 제거 */
-  padding: 5px 0; /* 각 항목의 간격 설정 */
-  align-items: center; /* 수직 가운데 정렬 */
+.StatValue-1 {
+  position: absolute;
+  left: 920px; /* x좌표 */
+  top: 325px; /* y좌표 */
+  width: 40px; /* x2 - x1 */
+  height: 25px; /* y2 - y1 */
+  font-family: 'Noto Sans Korean', sans-serif;
+  color: white;
+  text-align: left;
 }
 
-.character-info3 dl dt {
-  font-size: 14px; /* 원하는 글자 크기로 설정 */
-  font-weight: bold; /* 필요에 따라 글자 굵기 조정 */
-  margin-bottom: 5px; /* dt와 dd 사이의 간격 설정 */
-  white-space: nowrap;
+.StatType-2 {
+  position: absolute;
+  left: 810px; /* x좌표 */
+  top: 353px; /* y좌표 */
+  width: 40px; /* x2 - x1 */
+  height: 25px; /* y2 - y1 */
+  font-family: 'Noto Sans Korean', sans-serif;
+  color: rgb(199,165,3);
+  font-weight: bold;
 }
 
-.character-info3 dl dd {
-  font-size: 14px; /* dd 글자 크기 */
-  margin: 0; /* dd 기본 마진 제거 */
-  flex-grow: 1; /* dd가 남은 공간을 차지하도록 설정 */
-  white-space: nowrap; /* 줄바꿈 방지 */
-  overflow: hidden; /* 내용이 넘칠 경우 숨기기 */
-  text-overflow: ellipsis; /* 넘치는 텍스트를 '...'으로 표시 */
+.StatValue-2 {
+  position: absolute;
+  left: 920px; /* x좌표 */
+  top: 353px; /* y좌표 */
+  width: 40px; /* x2 - x1 */
+  height: 25px; /* y2 - y1 */
+  font-family: 'Noto Sans Korean', sans-serif;
+  color: white;
+  text-align: left;
+
+}
+
+.StatType-3 {
+  position: absolute;
+  left: 810px; /* x좌표 */
+  top: 382px; /* y좌표 */
+  width: 40px; /* x2 - x1 */
+  height: 25px; /* y2 - y1 */
+  font-family: 'Noto Sans Korean', sans-serif;
+  color: rgb(199,165,3);
+  font-weight: bold;
+}
+.StatValue-3 {
+  position: absolute;
+  left: 920px; /* x좌표 */
+  top: 382px; /* y좌표 */
+  width: 40px; /* x2 - x1 */
+  height: 25px; /* y2 - y1 */
+  font-family: 'Noto Sans Korean', sans-serif;
+  color: white;
+  text-align: left;
 }
 
 .top-header {

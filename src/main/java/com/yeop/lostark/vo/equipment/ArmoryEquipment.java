@@ -9,8 +9,12 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ArmoryEquipment {
     private String type;
-    private String icon;
     private String name;
-    private String grade;
+    private String icon;
+    private String value = "";
+    private String enhancementValue;
+    private int transcendenceValue;
+    private String quality;
+    private String qualityColor;
     private String tooltip;
 }
